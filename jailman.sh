@@ -97,8 +97,7 @@ usage() {
 }
 
 # Important defines:
-# shellcheck disable=SC2046
-SCRIPT_NAME=$(basename $(test -L "${BASH_SOURCE[0]}" && readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}"));
+SCRIPT_NAME="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")");"
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd);
 export SCRIPT_NAME
 export SCRIPT_DIR
@@ -111,8 +110,8 @@ source "${SCRIPT_DIR}/includes/global.sh"
 
 # Check for root privileges
 if ! [ "$(id -u)" = 0 ]; then
-   echo "This script must be run with root privileges"
-   exit 1
+	echo "This script must be run with root privileges"
+	exit 1
 fi
 
 # Auto Update
@@ -217,7 +216,7 @@ if [ "${global_version:-}" != "1.3" ]; then
 fi
 
 # Check and Execute requested jail destructions
-if [ ${#destroyjails[@]} -eq 0 ]; then 
+if [ ${#destroyjails[@]} -eq 0 ]; then
 	echo "No jails to destroy"
 else
 	# shellcheck disable=SC2124,SC2145
@@ -231,15 +230,16 @@ else
 fi
 
 # Check and Execute requested jail Installs
-if [ ${#installjails[@]} -eq 0 ]; then 
+if [ ${#installjails[@]} -eq 0 ]; then
 	echo "No jails to install"
 else
-	# shellcheck disable=SC2124,SC2145
+	# shellcheck disable=SC2145
 	echo "jails to install ${installjails[@]}"
 	for jail in "${installjails[@]}"
 	do
-		blueprint=jail_${jail}_blueprint
-		if [ -z "${!blueprint:-}" ]
+		blueprint_name=jail_${jail}_blueprint
+		blueprint=${!blueprint_name:-}
+		if [ -z "${blueprint}" ]
 		then
 			echo "Config for ${jail} in config.yml incorrect. Please check your config."
 			exit 1
@@ -255,10 +255,10 @@ else
 fi
 
 # Check and Execute requested jail Reinstalls
-if [ ${#redojails[@]} -eq 0 ]; then 
+if [ ${#redojails[@]} -eq 0 ]; then
 	echo "No jails to ReInstall"
 else
-	# shellcheck disable=SC2124,SC2145
+	# shellcheck disable=SC2145
 	echo "jails to reinstall ${redojails[@]}"
 	for jail in "${redojails[@]}"
 	do
@@ -278,12 +278,11 @@ else
 	done
 fi
 
-
 # Check and Execute requested jail Updates
-if [ ${#updatejails[@]} -eq 0 ]; then 
+if [ ${#updatejails[@]} -eq 0 ]; then
 	echo "No jails to Update"
 else
-	# shellcheck disable=SC2124,SC2145
+	# shellcheck disable=SC2145
 	echo "jails to update ${updatejails[@]}"
 	for jail in "${updatejails[@]}"
 	do
@@ -306,10 +305,10 @@ else
 fi
 
 # Check and Execute requested jail Upgrades
-if [ ${#upgradejails[@]} -eq 0 ]; then 
+if [ ${#upgradejails[@]} -eq 0 ]; then
 	echo "No jails to Upgrade"
 else
-	# shellcheck disable=SC2124,SC2145
+	# shellcheck disable=SC2145
 	echo "jails to update ${upgradejails[@]}"
 	for jail in "${upgradejails[@]}"
 	do
