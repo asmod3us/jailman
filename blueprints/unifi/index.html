@@ -1,0 +1,1066 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Project Design and Documentation for development">
+      
+      
+        <link rel="canonical" href="https://ornias1993.github.io/jailman/blueprints/unifi/">
+      
+      
+        <meta name="author" content="Ornias1993">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1, mkdocs-material-5.1.0">
+    
+    
+      
+        <title>Unifi Controller - JailMan</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.89dc9fe3.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#unifi-controller" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://ornias1993.github.io/jailman/" title="JailMan" class="md-header-nav__button md-logo" aria-label="JailMan">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,8A3,3 0 0,0 15,5A3,3 0 0,0 12,2A3,3 0 0,0 9,5A3,3 0 0,0 12,8M12,11.54C9.64,9.35 6.5,8 3,8V19C6.5,19 9.64,20.35 12,22.54C14.36,20.35 17.5,19 21,19V8C17.5,8 14.36,9.35 12,11.54Z" /></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            JailMan
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Unifi Controller
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/Ornias1993/jailman/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ornias1993/jailman
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+          
+
+  
+
+<nav class="md-tabs md-tabs--active" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  <li class="md-tabs__item">
+    
+      <a href="../.." class="md-tabs__link">
+        Introduction
+      </a>
+    
+  </li>
+
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../bitwarden/" class="md-tabs__link md-tabs__link--active">
+          Blueprints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../migration/v1.1.x%20to%20v1.2.x/" class="md-tabs__link">
+          Migration
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://ornias1993.github.io/jailman/" title="JailMan" class="md-nav__button md-logo" aria-label="JailMan">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,8A3,3 0 0,0 15,5A3,3 0 0,0 12,2A3,3 0 0,0 9,5A3,3 0 0,0 12,8M12,11.54C9.64,9.35 6.5,8 3,8V19C6.5,19 9.64,20.35 12,22.54C14.36,20.35 17.5,19 21,19V8C17.5,8 14.36,9.35 12,11.54Z" /></svg>
+
+    </a>
+    JailMan
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/Ornias1993/jailman/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ornias1993/jailman
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../CONTRIBUTING/" title="Contribution and Review Guidelines" class="md-nav__link">
+      Contribution and Review Guidelines
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../ISSUE_TEMPLATE/" title="Issue Template" class="md-nav__link">
+      Issue Template
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../PULL_REQUEST_TEMPLATE/" title="Pull Request Template" class="md-nav__link">
+      Pull Request Template
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../config%20options/" title="Config options" class="md-nav__link">
+      Config options
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../test/" title="Test" class="md-nav__link">
+      Test
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
+    
+    <label class="md-nav__link" for="nav-7">
+      Blueprints
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Blueprints" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+        </span>
+        Blueprints
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../bitwarden/" title="Bitwarden_RS" class="md-nav__link">
+      Bitwarden_RS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../influxdb/" title="InfluxDB" class="md-nav__link">
+      InfluxDB
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../jackett/" title="Jackett" class="md-nav__link">
+      Jackett
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../kms/" title="Py-KMS" class="md-nav__link">
+      Py-KMS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../lidarr/" title="Lidarr" class="md-nav__link">
+      Lidarr
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../mariadb/" title="MariaDB" class="md-nav__link">
+      MariaDB
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../nextcloud/" title="Nextcloud" class="md-nav__link">
+      Nextcloud
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../organizr/" title="Organizr" class="md-nav__link">
+      Organizr
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../plex/" title="Plex" class="md-nav__link">
+      Plex
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../radarr/" title="Radarr" class="md-nav__link">
+      Radarr
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../sonarr/" title="Sonarr" class="md-nav__link">
+      Sonarr
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../tautulli/" title="Tautulli" class="md-nav__link">
+      Tautulli
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../transmission/" title="Transmission" class="md-nav__link">
+      Transmission
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Unifi Controller
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="Unifi Controller" class="md-nav__link md-nav__link--active">
+      Unifi Controller
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-description" class="md-nav__link">
+    Config Description
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unifi-controller-post-install" class="md-nav__link">
+    Unifi-Controller Post-Install
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unifi-controller-documentation-can-be-found-at-httpswwwuicomdownloadunifidefaultdefaultunifi-controller-v5-user-guide" class="md-nav__link">
+    Unifi Controller documentation can be found at https://www.ui.com/download/unifi/default/default/unifi-controller-v5-user-guide
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#original-readme-from-the-upstream-unifi-poller-github" class="md-nav__link">
+    Original README from the upstream Unifi-Poller Github.
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation_1" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backstory" class="md-nav__link">
+    Backstory
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operation" class="md-nav__link">
+    Operation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-it-look-like" class="md-nav__link">
+    What's it look like?
+  </a>
+  
+    <nav class="md-nav" aria-label="What's it look like?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#client-dashboard-influxdb" class="md-nav__link">
+    Client Dashboard (InfluxDB)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usg-dashboard-influxdb" class="md-nav__link">
+    USG Dashboard (InfluxDB)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uap-dashboard-influxdb" class="md-nav__link">
+    UAP Dashboard (InfluxDB)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usw-switch-dashboard-influxdb" class="md-nav__link">
+    USW / Switch Dashboard (InfluxDB)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integrations" class="md-nav__link">
+    Integrations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#copyright-license" class="md-nav__link">
+    Copyright &amp; License
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      Migration
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Migration" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+        </span>
+        Migration
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../migration/v1.1.x%20to%20v1.2.x/" title="V1.1.x to v1.2.x" class="md-nav__link">
+      V1.1.x to v1.2.x
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-description" class="md-nav__link">
+    Config Description
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unifi-controller-post-install" class="md-nav__link">
+    Unifi-Controller Post-Install
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unifi-controller-documentation-can-be-found-at-httpswwwuicomdownloadunifidefaultdefaultunifi-controller-v5-user-guide" class="md-nav__link">
+    Unifi Controller documentation can be found at https://www.ui.com/download/unifi/default/default/unifi-controller-v5-user-guide
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#original-readme-from-the-upstream-unifi-poller-github" class="md-nav__link">
+    Original README from the upstream Unifi-Poller Github.
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation_1" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backstory" class="md-nav__link">
+    Backstory
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operation" class="md-nav__link">
+    Operation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-it-look-like" class="md-nav__link">
+    What's it look like?
+  </a>
+  
+    <nav class="md-nav" aria-label="What's it look like?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#client-dashboard-influxdb" class="md-nav__link">
+    Client Dashboard (InfluxDB)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usg-dashboard-influxdb" class="md-nav__link">
+    USG Dashboard (InfluxDB)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uap-dashboard-influxdb" class="md-nav__link">
+    UAP Dashboard (InfluxDB)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usw-switch-dashboard-influxdb" class="md-nav__link">
+    USW / Switch Dashboard (InfluxDB)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integrations" class="md-nav__link">
+    Integrations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#copyright-license" class="md-nav__link">
+    Copyright &amp; License
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/Ornias1993/jailman/edit/dev/docs/blueprints/unifi.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>
+                  </a>
+                
+                
+                  
+                
+                
+                <h1 id="unifi-controller">Unifi Controller<a class="headerlink" href="#unifi-controller" title="Permanent link">&para;</a></h1>
+<h3 id="installation">Installation:<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>This jail requires an existing InfluxDB jail. InfluxDB may be created using the same install command, as long as influxdb is listed first.</li>
+<li>Once the script runs, a user must be created in the Unifi Controller software for your Unifi-Poller user.</li>
+<li>To view the data from Unifi-Poller, Grafana is required. Add the unifi InfluxDB database as a data source in Grafana.</li>
+</ul>
+<h3 id="config-description">Config Description<a class="headerlink" href="#config-description" title="Permanent link">&para;</a></h3>
+<ul>
+<li>unifi_poller: boolean, true if you want to also install unifi-poller</li>
+<li>db_jail: This is the name of your influxdb database jail, should be influxdb.</li>
+<li>unifi_db_name: The name of the database that will be created in influxdb for Unifi Poller.</li>
+<li>unifi_db_user &amp; unifi_db_password: The created database's credentials for Unifi Poller.</li>
+<li>up_user &amp; up_password: The Unifi-Poller user credentials. This user must be created in the Unifi Controller web gui after install matching these credentials. This is for the connection between Unifi Controller &amp; Unifi Poller</li>
+</ul>
+<h3 id="unifi-controller-post-install">Unifi-Controller Post-Install<a class="headerlink" href="#unifi-controller-post-install" title="Permanent link">&para;</a></h3>
+<p>After the script runs and the unifi jail is running, open the web gui of the unifi jail at port 8443 (i.e. https://192.168.2.250:8443). After completing the initial setup wizard, go to Admins --&gt; Add New Admin. Select "Manually set and share the password", enter the username and password used for up_user &amp; up_password. Uncheck 'Require the user to change their password'. Verify "Role" is set to 'Read Only'. Click Create.</p>
+<h2 id="unifi-controller-documentation-can-be-found-at-httpswwwuicomdownloadunifidefaultdefaultunifi-controller-v5-user-guide">Unifi Controller documentation can be found at https://www.ui.com/download/unifi/default/default/unifi-controller-v5-user-guide<a class="headerlink" href="#unifi-controller-documentation-can-be-found-at-httpswwwuicomdownloadunifidefaultdefaultunifi-controller-v5-user-guide" title="Permanent link">&para;</a></h2>
+<h2 id="original-readme-from-the-upstream-unifi-poller-github">Original README from the upstream Unifi-Poller Github.<a class="headerlink" href="#original-readme-from-the-upstream-unifi-poller-github" title="Permanent link">&para;</a></h2>
+<p>https://github.com/unifi-poller/unifi-poller</p>
+<p><img width="320px" src="https://raw.githubusercontent.com/wiki/unifi-poller/unifi-poller/images/unifi-poller-logo.png"></p>
+<p><a href="https://discord.gg/KnyKYt2"><img alt="discord" src="https://badgen.net/badge/icon/Discord?color=0011ff&amp;label&amp;icon=https://simpleicons.now.sh/discord/eee" title="Ubiquiti Discord" /></a>
+<a href="https://twitter.com/TwitchCaptain"><img alt="twitter" src="https://badgen.net/twitter/follow/TwitchCaptain?icon=https://simpleicons.now.sh/twitter/0099ff&amp;label=TwitchCaptain&amp;color=0116ff" title="TwitchCaptain @ Twitter" /></a>
+<a href="http://grafana.com/dashboards?search=unifi-poller"><img alt="grafana" src="https://badgen.net/https/golift.io/bd/grafana/dashboard-downloads/11310,10419,10414,10415,10416,10417,10418,11311,11312,11313,11314,11315?icon=https://simpleicons.now.sh/grafana/ED7F38&amp;color=0011ff" title="Grafana Dashboard Downloads" /></a>
+<a href="https://hub.docker.com/r/golift/unifi-poller"><img alt="pulls" src="https://badgen.net/docker/pulls/golift/unifi-poller?icon=https://simpleicons.now.sh/docker/38B1ED&amp;label=pulls&amp;color=0011ff" title="Docker Pulls" /></a>
+<a href="https://www.somsubhra.com/github-release-stats/?username=unifi-poller&amp;repository=unifi-poller"><img alt="DLs" src="https://img.shields.io/github/downloads/unifi-poller/unifi-poller/total.svg?logo=github&amp;color=0116ff" title="GitHub Downloads" /></a></p>
+<p><a href="https://github.com/golift/unifi"><img alt="unifi" src="https://badgen.net/badge/UniFi/5.12.x,5.13.x,UAP,USG,USW,UDM?list=|&amp;icon=https://docs.golift.io/svg/ubiquiti_color.svg&amp;color=0099ee" title="UniFi Products Supported" /></a>
+<a href="https://github.com/golift/application-builder"><img alt="builer" src="https://badgen.net/badge/go/Application%20Builder?label=&amp;icon=https://docs.golift.io/svg/go.svg&amp;color=0099ee" title="Go Application Builder" /></a>
+<a href="https://github.com/unifi-poller/unifi-poller"><img alt="stars" src="https://badgen.net/github/stars/unifi-poller/unifi-poller?icon=https://simpleicons.now.sh/macys/fab&amp;label=&amp;color=0099ee" title="GitHub Stars" /></a>
+<a href="https://travis-ci.org/unifi-poller/unifi-poller"><img alt="travis" src="https://badgen.net/travis/unifi-poller/unifi-poller?icon=travis&amp;label=build" title="Travis Build" /></a></p>
+<p>Collect your UniFi controller data and report it to an InfluxDB instance,
+or export it for Prometheus collection.
+<a href="http://grafana.com/dashboards?search=unifi-poller">Twelve Grafana Dashboards</a>
+included; with screenshots. Six for InfluxDB and six for Prometheus.</p>
+<h2 id="installation_1">Installation<a class="headerlink" href="#installation_1" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/unifi-poller/unifi-poller/wiki/Installation">See the Wiki!</a>
+We have a special place for <a href="https://github.com/unifi-poller/unifi-poller/wiki/Docker">Docker Users</a>.
+I'm willing to help if you have troubles.
+Open an <a href="https://github.com/unifi-poller/unifi-poller/issues">Issue</a> and
+we'll figure out how to get things working for you. You can also get help in
+the #unifi-poller channel on the <a href="https://discord.gg/KnyKYt2">Ubiquiti Discord server</a>. I've also
+<a href="https://community.ui.com/questions/Unifi-Poller-Store-Unifi-Controller-Metrics-in-InfluxDB-without-SNMP/58a0ea34-d2b3-41cd-93bb-d95d3896d1a1">provided a forum post</a>
+you may use to get additional help.</p>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.ui.com">Ubiquiti</a> makes networking devices like switches, gateways
+(routers) and wireless access points. They have a line of equipment named
+<a href="https://www.ui.com/products/#unifi">UniFi</a> that uses a
+<a href="https://www.ui.com/download/unifi/">controller</a> to keep stats and simplify network
+device configuration. This controller can be installed on Windows, macOS, FreeBSD,
+Linux or Docker. Ubiquiti also provides a dedicated hardware device called a
+<a href="https://www.ui.com/unifi/unifi-cloud-key/">CloudKey</a> that runs the controller software.
+More recently they've developed the Dream Machine; it's still in
+beta / early access, but UniFi Poller can collect its data!</p>
+<p>UniFi Poller is a small Golang application that runs on Windows, macOS, FreeBSD,
+Linux or Docker. In Influx-mode it polls a UniFi controller every 30 seconds for
+measurements and exports the data to an Influx database. In Prometheus mode the
+poller opens a web port and accepts Prometheus polling. It converts the UniFi
+Controller API data into Prometheus exports on the fly.</p>
+<p>This application requires your controller to be running all the time. If you run
+a UniFi controller, there's no excuse not to install
+<a href="https://github.com/unifi-poller/unifi-poller/wiki/InfluxDB">Influx</a> or
+<a href="https://prometheus.io">Prometheus</a>,
+<a href="https://github.com/unifi-poller/unifi-poller/wiki/Grafana">Grafana</a> and this app.
+You'll have a plethora of data at your fingertips and the ability to craft custom
+graphs to slice the data any way you choose. Good luck!</p>
+<h2 id="backstory">Backstory<a class="headerlink" href="#backstory" title="Permanent link">&para;</a></h2>
+<p>I found a simple piece of code on GitHub that sorta did what I needed;
+we all know that story. I wanted more data, so I added more data collection.
+I probably wouldn't have made it this far if <a href="https://github.com/dewski/unifi">Garrett</a>
+hadn't written the original code I started with. Many props my man.
+The original code pulled only the client data. This app now pulls data
+for clients, access points, security gateways, dream machines and switches.</p>
+<p>I've been trying to get my UAP data into Grafana. Sure, google search that.
+You'll find <a href="https://community.ubnt.com/t5/UniFi-Wireless/Grafana-dashboard-for-UniFi-APs-now-available/td-p/1833532">this</a>.
+What if you don't want to deal with SNMP?
+Well, here you go. I've replicated 400% of what you see on those SNMP-powered
+dashboards with this Go app running on the same mac as my UniFi controller.
+All without enabling SNMP nor trying to understand those OIDs. Mad props
+to <a href="https://community.ubnt.com/t5/user/viewprofilepage/user-id/303058">waterside</a>
+for making this dashboard; it gave me a fantastic start to making my own dashboards.</p>
+<h2 id="operation">Operation<a class="headerlink" href="#operation" title="Permanent link">&para;</a></h2>
+<p>You can control this app with puppet, chef, saltstack, homebrew or a simple bash
+script if you needed to. Packages are available for macOS, Linux, FreeBSD and Docker.
+It works just fine on <a href="https://github.com/unifi-poller/unifi-poller/wiki/Windows">Windows</a> too.
+Most people prefer Docker, and this app is right at home in that environment.</p>
+<h2 id="whats-it-look-like">What's it look like?<a class="headerlink" href="#whats-it-look-like" title="Permanent link">&para;</a></h2>
+<p>There are 12 total dashboards available; the 6 InfluxDB dashboards are very similar
+to the 6 Prometheus dashboards. Below you'll find screenshots of the first four dashboards.</p>
+<h5 id="client-dashboard-influxdb">Client Dashboard (InfluxDB)<a class="headerlink" href="#client-dashboard-influxdb" title="Permanent link">&para;</a></h5>
+<p><img alt="UniFi Clients Dashboard Image" src="https://grafana.com/api/dashboards/10418/images/7540/image" /></p>
+<h5 id="usg-dashboard-influxdb">USG Dashboard (InfluxDB)<a class="headerlink" href="#usg-dashboard-influxdb" title="Permanent link">&para;</a></h5>
+<p><img alt="USG Dashboard Image" src="https://grafana.com/api/dashboards/10416/images/7543/image" /></p>
+<h5 id="uap-dashboard-influxdb">UAP Dashboard (InfluxDB)<a class="headerlink" href="#uap-dashboard-influxdb" title="Permanent link">&para;</a></h5>
+<p><img alt="UAP Dashboard Image" src="https://grafana.com/api/dashboards/10415/images/7542/image" /></p>
+<h5 id="usw-switch-dashboard-influxdb">USW / Switch Dashboard (InfluxDB)<a class="headerlink" href="#usw-switch-dashboard-influxdb" title="Permanent link">&para;</a></h5>
+<p>You can drill down into specific sites, switches, and ports. Compare ports in different
+sites side-by-side. So easy! This screenshot barely does it justice.
+<img alt="USW Dashboard Image" src="https://grafana.com/api/dashboards/10417/images/7544/image" /></p>
+<h2 id="integrations">Integrations<a class="headerlink" href="#integrations" title="Permanent link">&para;</a></h2>
+<p>The following fine folks are providing their services, completely free! These service
+integrations are used for things like storage, building, compiling, distribution and
+documentation support. This project succeeds because of them. Thank you!</p>
+<p style="text-align: center;">
+<a title="Jfrog Bintray" alt="Jfrog Bintray" href="https://bintray.com"><img src="https://docs.golift.io/integrations/bintray.png"/></a>
+<a title="GitHub" alt="GitHub" href="https://GitHub.com"><img src="https://docs.golift.io/integrations/octocat.png"/></a>
+<a title="Docker Cloud" alt="Docker" href="https://cloud.docker.com"><img src="https://docs.golift.io/integrations/docker.png"/></a>
+<a title="Travis-CI" alt="Travis-CI" href="https://Travis-CI.com"><img src="https://docs.golift.io/integrations/travis-ci.png"/></a>
+<a title="Homebrew" alt="Homebrew" href="https://brew.sh"><img src="https://docs.golift.io/integrations/homebrew.png"/></a>
+<a title="Go Lift" alt="Go Lift" href="https://golift.io"><img src="https://docs.golift.io/integrations/golift.png"/></a>
+<a title="Grafana" alt="Grafana" href="https://grafana.com"><img src="https://docs.golift.io/integrations/grafana.png"/></a>
+</p>
+
+<h2 id="copyright-license">Copyright &amp; License<a class="headerlink" href="#copyright-license" title="Permanent link">&para;</a></h2>
+<p><img style="float: right;" align="right" width="200px" src="https://raw.githubusercontent.com/wiki/unifi-poller/unifi-poller/images/unifi-poller-logo.png"></p>
+<ul>
+<li>Copyright © 2018-2020 David Newhall II.</li>
+<li>See <a href="LICENSE">LICENSE</a> for license information.</li>
+</ul>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../transmission/" title="Transmission" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Transmission
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../../migration/v1.1.x%20to%20v1.2.x/" title="V1.1.x to v1.2.x" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                V1.1.x to v1.2.x
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" /></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.36cbf620.min.js"></script>
+      <script src="../../assets/javascripts/bundle.00c583dd.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: ["tabs"],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.7f7c8775.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
