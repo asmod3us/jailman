@@ -1,0 +1,3 @@
+blueprint:
+  forked_daapd:
+    pkgs: curl
