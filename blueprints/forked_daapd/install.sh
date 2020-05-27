@@ -45,5 +45,5 @@ iocage exec "$1" service forked-daapd start
 
 # Done!
 echo "Installation complete!"
-echo "forked-daapd is available at http://${JAIL_IP}:3689/ and via daap"
+echo "forked-daapd is available at http://${ip4_addr%/*}:3689/ and via daap."
 echo ""
