@@ -134,6 +134,7 @@ do
 	value="jail_${1}_$var"
 	val=${!value:-}
 	declare -g "${var}=${val}"
+	echo "Set variable $var to ${val}"
 	
 	if [[ "${var}" =~ ^link_.* ]]; 
 	then
