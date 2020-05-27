@@ -118,5 +118,5 @@ jail:
     blueprint: forked_daapd
     ip4_addr: 192.168.1.252/24
     gateway: 192.168.1.1
-	itunes_media: /mnt/itunes
+    itunes_media: /mnt/itunes
 
