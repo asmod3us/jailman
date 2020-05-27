@@ -12,6 +12,8 @@ initblueprint "$1"
 
 createmount "$1" "${itunes_media}" /media/itunes
 
+# shellcheck disable=SC2154
+
 cp "${SCRIPT_DIR}"/blueprints/forked_daapd/build-ffmpeg.sh /mnt/"${global_dataset_iocage}"/jails/"$1"/root/root/
 cp "${SCRIPT_DIR}"/blueprints/forked_daapd/build-daapd.sh /mnt/"${global_dataset_iocage}"/jails/"$1"/root/root/
 

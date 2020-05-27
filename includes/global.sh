@@ -169,7 +169,7 @@ blueprint=jail_${1}_blueprint
 echo "DO NOT DELETE THIS FILE" >> "/mnt/${global_dataset_config}/${1}/INSTALLED"
 echo "Jail $1 using blueprint ${!blueprint}, installed successfully."
 if [[ ! "${2}" ]]; then
- echo "Please consult the wiki for instructions connecting to your newly installed jail" 
+ echo "Please consult the wiki for instructions connecting to your newly installed jail"
 else
  echo ${2}
 fi
