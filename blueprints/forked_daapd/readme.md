@@ -1,6 +1,7 @@
 # forked-dappd
 
 ### intro
+
 This blueprint installs forked-daapd with a current version of ffmpeg.
 As it compiles ffmepg from sources the initialisation takes a while.
 
