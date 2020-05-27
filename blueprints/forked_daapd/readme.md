@@ -3,7 +3,8 @@
 ### intro
 
 This blueprint installs forked-daapd with a current version of ffmpeg.
-As it compiles ffmepg from sources the initialisation takes a while.
+As it compiles ffmepg from sources the initialisation takes a while (~25 minutes
+on a Xeon E3-1230 v5 @ 3.40GHz).
 
 #### Configuration parameters
 
