@@ -113,3 +113,10 @@ jail:
     datasource_database: unifi
     datasource_user: unifi
     datasource_password: unifi-poller
+	
+  forked_daapd: 
+    blueprint: forked_daapd
+    ip4_addr: 192.168.1.252/24
+    gateway: 192.168.1.1
+	itunes_media: /mnt/itunes
+

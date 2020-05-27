@@ -1,5 +1,5 @@
 # shellcheck disable=SC2154
-createmount "$1" "${global_dataset_media}" /media
+createmount "$1" "${itunes_media}" /media/itunes
 
 cp "${SCRIPT_DIR}"/blueprints/forked_daapd/build-ffmpeg.sh /mnt/"${global_dataset_iocage}"/jails/"$1"/root/root/
 cp "${SCRIPT_DIR}"/blueprints/forked_daapd/build-daapd.sh /mnt/"${global_dataset_iocage}"/jails/"$1"/root/root/
@@ -11,7 +11,7 @@ iocage exec "$1" bash /root/build-daapd.sh
 
 # default config: /usr/local/etc/forked-daapd.conf
 iocage exec "$1" cp /usr/local/etc/forked-daapd.conf /config/
-iocage exec "$1" sed -i '' -e "/directories =/s?=.*?= { \"/media/$global_dataset_paths_itunes\" }?" /config/forked-daapd.conf
+iocage exec "$1" sed -i '' -e "/directories =/s?=.*?= { \"/media/itunes\" }?" /config/forked-daapd.conf
 
 iocage exec "$1" sysrc "dbus_enable=YES"
 iocage exec "$1" sysrc "avahi_daemon_enable=YES"
