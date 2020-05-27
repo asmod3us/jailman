@@ -178,10 +178,11 @@ fi
 export -f exitblueprint
 
 createmount() {
-jail="${1:-}"
-dataset="${2:-}"
-mountpoint="${3:-}"
-fstab="${4:-}"
+	jail=${1:-}
+	dataset=${2:-}
+	mountpoint=${3:-}
+	fstab=${4:-}
+
 	if [ -z "${dataset}" ] ; then
 		echo "ERROR: No Dataset specified to create and/or mount"
 		exit 1
