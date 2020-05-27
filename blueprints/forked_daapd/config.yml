@@ -1,3 +1,3 @@
 blueprint:
   forked_daapd:
-    pkgs: curl
+    pkgs: curl alsa-lib avahi avahi-libdns fontconfig fribidi gettext json-c libconfuse libevent libgcrypt libiconv libinotify libplist libsodium libsoxr  libunistring libwebsockets openjdk8-jre pkgconf sqlite sqlite3

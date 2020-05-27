@@ -4,7 +4,7 @@ createmount "$1" "${global_dataset_media}" /media
 cp "${SCRIPT_DIR}"/blueprints/forked_daapd/build-ffmpeg.sh /mnt/"${global_dataset_iocage}"/jails/"$1"/root/root/
 cp "${SCRIPT_DIR}"/blueprints/forked_daapd/build-daapd.sh /mnt/"${global_dataset_iocage}"/jails/"$1"/root/root/
 
-iocage exec "$1" pkg install -y alsa-lib autoconf automake autotools avahi avahi-libdns bash cmake curl fontconfig fribidi gettext git glib gmake gperf iconv json-c libconfuse libevent libgcrypt libiconv libinotify libplist libsodium libsoxr libtool libunistring libwebsockets mercurial mxml nasm openjdk8-jre opus pkgconf rsync sqlite sqlite3 wget yasm
+iocage exec "$1" pkg install -y autoconf automake autotools cmake git glib gmake gperf iconv libtool mercurial mxml nasm opus rsync wget yasm
 
 iocage exec "$1" bash /root/build-ffmpeg.sh
 iocage exec "$1" bash /root/build-daapd.sh
