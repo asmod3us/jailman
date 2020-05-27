@@ -43,7 +43,15 @@ iocage exec "$1" service dbus start
 iocage exec "$1" service avahi-daemon start
 iocage exec "$1" service forked-daapd start
 
+JAIL_IP=${ip4_addr:-}
+if [ -z "${JAIL_IP}" ]; then
+	DEFAULT_IF=$(iocage exec "$1" route get default | awk '/interface/ {print $2}')
+	JAIL_IP=$(iocage exec "$1" ifconfig "$DEFAULT_IF" | awk '/inet/ { print $2 }')
+else
+	JAIL_IP=${ip4_addr%/*}
+fi
+
 # Done!
 echo "Installation complete!"
-echo "forked-daapd is available at http://${ip4_addr%/*}:3689/ and via daap."
+echo "forked-daapd is available at http://${JAIL_IP}:3689/ and via daap."
 echo ""
