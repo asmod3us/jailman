@@ -24,11 +24,4 @@ iocage exec "$1" sed -i '' -e 's?complete_dir = Downloads/complete?complete_dir 
 
 iocage exec "$1" service sabnzbd start
 
-JAIL_IP=${ip4_addr:-}
-if [ -z "${JAIL_IP}" ]; then
-	DEFAULT_IF=$(iocage exec "$1" route get default | awk '/interface/ {print $2}')
-	JAIL_IP=$(iocage exec "$1" ifconfig "$DEFAULT_IF" | awk '/inet/ { print $2 }')
-else
-	JAIL_IP=${ip4_addr%/*}
-fi
-exitblueprint "$1" "sabnzbd is now accessible at http://${JAIL_IP}:8080/"
+exitblueprint "$1" "sabnzbd is now accessible at http://${jail_ip}:8080/"
