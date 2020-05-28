@@ -24,6 +24,7 @@ iocage exec "$1" bash /root/build-daapd.sh
 
 # default config: /usr/local/etc/forked-daapd.conf
 iocage exec "$1" cp /usr/local/etc/forked-daapd.conf /config/
+iocage exec "$1" chown -R daapd:daapd /config
 
 # set itunes lib
 # enable websocket port

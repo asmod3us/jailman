@@ -21,6 +21,8 @@ iocage exec "$1" bash /root/build-daapd.sh
 # remove build depdendencies
 iocage exec "$1" pkg delete -y autoconf automake autotools cmake curl git gmake gperf iconv libtool mercurial nasm opus rsync wget yasm
 
+iocage exec "$1" chown -R daapd:daapd /config
+
 iocage exec "$1" sysrc "dbus_enable=YES"
 iocage exec "$1" sysrc "avahi_daemon_enable=YES"
 iocage exec "$1" sysrc "forked_daapd_flags=-c /config/forked-daapd.conf"
