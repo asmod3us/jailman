@@ -13,6 +13,7 @@ iocage exec "$1" sysrc "sabnzbd_enable=YES"
 iocage exec "$1" sysrc "sabnzbd_conf_dir=/config"
 iocage exec "$1" sysrc "sabnzbd_user=_sabnzbd"
 iocage exec "$1" sysrc "sabnzbd_group=_sabnzbd"
+
 # start once to let service write default config
 iocage exec "$1" service sabnzbd start
 iocage exec "$1" service sabnzbd stop
