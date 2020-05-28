@@ -49,7 +49,4 @@ else
 	JAIL_IP=${ip4_addr%/*}
 fi
 
-# Done!
-echo "Installation complete!"
-echo "forked-daapd is available at http://${JAIL_IP}:3689/ and via daap."
-echo ""
+exitblueprint "$1" "forked-daapd is available at http://${JAIL_IP}:3689/ and via daap."
