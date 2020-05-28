@@ -7,6 +7,7 @@ createmount "$1" "${global_dataset_downloads}" /mnt/downloads
 createmount "$1" "${global_dataset_downloads}"/complete /mnt/downloads/complete
 createmount "$1" "${global_dataset_downloads}"/incomplete /mnt/downloads/incomplete
 
+# setup sabnzbd service
 iocage exec "$1" chown -R _sabnzbd:_sabnzbd /config
 iocage exec "$1" sysrc "sabnzbd_enable=YES"
 iocage exec "$1" sysrc "sabnzbd_conf_dir=/config"
