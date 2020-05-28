@@ -1,0 +1,4 @@
+blueprint:
+  example:
+    pkgs: git python3 py37-pip
+
