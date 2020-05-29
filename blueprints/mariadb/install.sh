@@ -41,7 +41,7 @@ echo "Copying Caddyfile for no SSL"
 cp "${includes_dir}"/caddy.rc /mnt/"${global_dataset_iocage}"/jails/"$1"/root/usr/local/etc/rc.d/caddy
 cp "${includes_dir}"/Caddyfile /mnt/"${global_dataset_iocage}"/jails/"$1"/root/usr/local/www/Caddyfile
 iocage exec "${1}" sed -i '' "s/yourhostnamehere/${host_name}/" /usr/local/www/Caddyfile
-iocage exec "${1}" sed -i '' "s/JAIL-IP/${ip4_addr%/*}/" /usr/local/www/Caddyfile
+iocage exec "${1}" sed -i '' "s/JAIL-IP/${jail_ip}/" /usr/local/www/Caddyfile
 
 iocage exec "${1}" sysrc caddy_enable="YES"
 iocage exec "${1}" sysrc php_fpm_enable="YES"
@@ -70,7 +70,7 @@ iocage exec "${1}" sed -i '' "s|mypassword|${root_password}|" /root/.my.cnf
 # Save passwords for later reference
 iocage exec "${1}" echo "MariaDB root password is ${root_password}" > /root/"${1}"_root_password.txt
 
-exitblueprint "$1" "MariaDB is now accessible at http://${ip4_addr%/*}"
+exitblueprint "$1"
 echo "All passwords are saved in /root/${1}_db_password.txt"
 if [ "${reinstall}" = "true" ]; 
 then
