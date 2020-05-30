@@ -24,7 +24,9 @@ parse_yaml() {
 
 # automatic update function
 gitupdate() {
-BRANCH=${1:-}
+GITBRANCH=$(git for-each-ref --format='%(upstream:short)' "$(git symbolic-ref -q HEAD)")
+BRANCH=${GITBRANCH:-}
+
 if [ "$(git config --get remote.origin.url)" = "https://github.com/Ornias1993/jailman" ]
 then
 	echo "The repository has been moved, please reinstall using the new repository: jailmanager/jailman"
@@ -130,7 +132,6 @@ else
 fi
 
 echo "Jail creation completed for ${1}"
-
 }
 
 initblueprint() {
