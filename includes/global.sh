@@ -114,7 +114,7 @@ createmount "${1}" "${global_dataset_config}"/"${1}" /config || exit 1
 createmount "${1}" "${global_dataset_config}"/portsnap || exit 1
 createmount "${1}" "${global_dataset_config}"/portsnap/db /var/db/portsnap || exit 1
 createmount "${1}" "${global_dataset_config}"/portsnap/ports /usr/ports || exit 1
-if [ "${!blueprintports}" == "true" ]
+if [ "${!blueprintports:-}" == "true" ]
 then
 	echo "Mounting and fetching ports"
 	iocage exec "${1}" "if [ -z /usr/ports ]; then portsnap fetch extract; else portsnap auto; fi"
