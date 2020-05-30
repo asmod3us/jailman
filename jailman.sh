@@ -11,10 +11,10 @@ set -o pipefail  # Use last non-zero exit code in a pipeline
 # adapted from https://github.com/bpm-rocks/strict
 # $1: status from failed command
 function errexit() {
-	echo "ERR While running jailman: status $1" >&2
 	local err=$?
-	set +o xtrace
 	local code="${1:-1}"
+	echo "ERR While running jailman: status $code" >&2
+	set +o xtrace
 
 	echo "Error in ${BASH_SOURCE[1]:-unknown}:${BASH_LINENO[0]:-unknown}. '${BASH_COMMAND:-unknown}' exited with status $err" >&2
 	if [[ ${#PIPESTATUS[@]} -gt 1 ]]; then
@@ -100,13 +100,15 @@ fi
 
 # Go through the options and put the jails requested in an array
 unset -v sub
+args=$("$@")
 while getopts ":i:r:u:d:g:h" opt
    do
    #Shellcheck on wordsplitting will be disabled. Wordsplitting can't happen, because it's already split using OPTIND.
      case $opt in
         i ) installjails=("$OPTARG")
 			# shellcheck disable=SC2046
-            until [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]] || [ -z $(eval "echo \${$OPTIND}") ]; do
+            until [ -z $(eval "echo \${$OPTIND} ] || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]] || ") ]; do
+				echo "at arg $OPTIND: ${args[$OPTIND]}"
 				# shellcheck disable=SC2207
                 installjails+=($(eval "echo \${$OPTIND}"))
                 OPTIND=$((OPTIND + 1))
