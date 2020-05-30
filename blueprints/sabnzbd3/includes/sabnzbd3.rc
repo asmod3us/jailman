@@ -28,8 +28,8 @@ rcvar=sabnzbd_enable
 load_rc_config ${name}
 
 : ${sabnzbd_enable:=NO}
-: ${sabnzbd_user:=_sabnzbd}
-: ${sabnzbd_group:=_sabnzbd}
+: ${sabnzbd_user:=sabnzbd}
+: ${sabnzbd_group:=sabnzbd}
 : ${sabnzbd_conf_dir="/config"}
 : ${sabnzbd_pidfile:="/var/run/sabnzbd/sabnzbd.pid"}
 
