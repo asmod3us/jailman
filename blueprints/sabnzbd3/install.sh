@@ -19,7 +19,7 @@ iocage exec "$1" "curl -qsL https://github.com/sabnzbd/sabnzbd/archive/"$archive
 cp "${includes_dir}"/build.sh /mnt/"${global_dataset_iocage}"/jails/"$1"/root/root/
 iocage exec "$1" bash /root/build.sh $target
 
-cp "${includes_dir}"/sabnzbd3.rc /usr/local/etc/rc.d/sabnzbd
+cp "${includes_dir}"/sabnzbd3.rc /mnt/"${global_dataset_iocage}"/jails/"$1"/root/usr/local/etc/rc.d/sabnzbd
 iocage exec "$1" chmod +x /usr/local/etc/rc.d/sabnzbd
 
 iocage exec "$1" pw user add sabnzbd -c sabnzbd -d /nonexistent -s /usr/bin/nologin
