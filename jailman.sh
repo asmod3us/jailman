@@ -103,6 +103,11 @@ unset -v sub
 args=("$@")
 arglen=${#args[@]}
 
+installjails=()
+redojails=()
+updatejails=()
+destroyjails=()
+upgradejails=()
 while getopts ":i:r:u:d:g:h" opt
    do
    #Shellcheck on wordsplitting will be disabled. Wordsplitting can't happen, because it's already split using OPTIND.
