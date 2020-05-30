@@ -100,19 +100,34 @@ fi
 
 # Go through the options and put the jails requested in an array
 unset -v sub
-args=$("$@")
+args=("$@")
+arglen=${#args[@]}
+
+echo "Arguments"
+echo "amount: $#"
+echo "array length: ${#args[@]}"
+echo "0: ${0:-undef}"
+echo "1: ${1:-undef}"
+echo "2: ${2:-undef}"
+echo "3: ${3:-undef}"
+echo "4: ${4:-undef}"
+echo "5: ${5:-undef}"
 while getopts ":i:r:u:d:g:h" opt
    do
    #Shellcheck on wordsplitting will be disabled. Wordsplitting can't happen, because it's already split using OPTIND.
      case $opt in
         i ) installjails=("$OPTARG")
 			# shellcheck disable=SC2046
-            until [ -z $(eval "echo \${$OPTIND} ] || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]] || ") ]; do
-				echo "at arg $OPTIND: ${args[$OPTIND]}"
+			echo "at arg $OPTIND"
+			echo "${args[$OPTIND]:-undef}"
+			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
+				echo "at arg $OPTIND"
 				# shellcheck disable=SC2207
-                installjails+=($(eval "echo \${$OPTIND}"))
-                OPTIND=$((OPTIND + 1))
-            done
+				installjails+=($(eval "echo \${$OPTIND}"))
+				echo "installjails=${installjails[*]}"
+				echo "${args[$OPTIND]}"
+				OPTIND=$((OPTIND + 1))
+			done
             ;;
         r ) redojails=("$OPTARG")
 			# shellcheck disable=SC2046
