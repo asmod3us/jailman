@@ -125,7 +125,7 @@ while getopts ":i:r:u:d:g:h" opt
 				# shellcheck disable=SC2207
 				installjails+=($(eval "echo \${$OPTIND}"))
 				echo "installjails=${installjails[*]}"
-				echo "${args[$OPTIND]}"
+				echo "${args[$OPTIND-1]}"
 				OPTIND=$((OPTIND + 1))
 			done
             ;;
