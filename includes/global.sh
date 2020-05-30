@@ -148,6 +148,7 @@ initblueprint() {
 		fi
 	done
 
+	declare -g "jail_root=/mnt/${global_dataset_iocage}/jails/$1/root"
 	declare -g "blueprint_dir=${SCRIPT_DIR}/blueprints/${!blueprint}"
 	declare -g "includes_dir=${SCRIPT_DIR}/blueprints/${!blueprint}/includes"
 
