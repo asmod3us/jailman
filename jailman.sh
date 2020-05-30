@@ -121,10 +121,10 @@ gitupdate
 # If no option is given, point to the help menu
 if [ $# -eq 0 ]
 then
-echo "Missing options!"
-        echo "(run $0 -h for help)"
-        echo ""
-        exit 0
+	echo "Missing options!"
+	echo "(run $0 -h for help)"
+	echo ""
+	exit 0
 fi
 
 # Go through the options and put the jails requested in an array
@@ -184,23 +184,12 @@ do
 			done
 			;;
 		h ) 
-			echo "Usage:"
-			echo "$0 -i "
-			echo "$0 -r "
-			echo "$0 -u "
-			echo "$0 -d  "
-			echo "$0 -g "
-			echo ""
-			echo "   -i to install jails, listed by name, space seperated like this: jackett plex sonarr"
-			echo "   -r to reinstall jails, listed by name, space seperated like this: jackett plex sonarr"
-			echo "   -u to update jails, listed by name, space seperated like this: jackett plex sonarr"
-			echo "   -d to destroy jails, listed by name, space seperated like this: jackett plex sonarrt"
-			echo "   -g to upgrade jails, listed by name, space seperated like this: jackett plex sonarr"
-			echo "   -h help (this output)"
-			exit 0
+			usage
+			exit 3
 			;;
-		? ) echo "Error: Invalid option was specified -$OPTARG"
-			exit 0
+		* ) echo "Error: Invalid option was specified -$OPTARG"
+			usage
+			exit 3
 			;;
 	esac
 done
