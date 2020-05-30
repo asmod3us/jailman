@@ -36,9 +36,8 @@ load_rc_config ${name}
 pidfile=${sabnzbd_pidfile}
 
 start_precmd="${name}_prestart"
-command_interpreter="/usr/local/share/sabnzbd3/venv/bin/python3"
-command="/usr/local/bin/SABnzbd.py"
-command_args="--daemon -f ${sabnzbd_conf_dir}/sabnzbd.ini --pidfile ${pidfile}"
+command="/usr/local/share/sabnzbd3/venv/bin/python"
+command_args="/usr/local/share/sabnzbd3/SABnzbd.py --daemon --config-file ${sabnzbd_conf_dir}/sabnzbd.ini --pidfile ${pidfile}"
 
 sabnzbd_prestart()
 {
@@ -49,5 +48,7 @@ sabnzbd_prestart()
                         install -d -o ${sabnzbd_user} -g ${sabnzbd_group} ${sabdir}
                 fi
         done
-        source /usr/local/share/sabnzbd3/venv/bin/activate
 }
+
+run_rc_command "$1"
+
