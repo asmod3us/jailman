@@ -119,7 +119,7 @@ do
 	case $opt in
 		i ) installjails=("$OPTARG")
 			# shellcheck disable=SC2046
-			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
+			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
 				installjails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
@@ -127,7 +127,7 @@ do
 			;;
 		r ) redojails=("$OPTARG")
 			# shellcheck disable=SC2046
-			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
+			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
 				redojails+=($(eval "echo \${$OPTIND}"))
 				redo+=("${args[$OPTIND-1]}")
@@ -136,7 +136,7 @@ do
 			;;
 		u ) updatejails=("$OPTARG")
 			# shellcheck disable=SC2046
-			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
+			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
 				updatejails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
@@ -144,7 +144,7 @@ do
 			;;
 		d ) destroyjails=("$OPTARG")
 			# shellcheck disable=SC2046
-			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
+			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
 				destroyjails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
@@ -152,7 +152,7 @@ do
 			;;
 		g ) upgradejails=("$OPTARG")
 			# shellcheck disable=SC2046
-			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
+			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
 				upgradejails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
