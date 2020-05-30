@@ -1,5 +1,5 @@
 blueprint:
   sabnzbd3:
-    pkgs: git python3 py37-pip py37-sqlite3
+    pkgs: git python3 py37-pip py37-sqlite3 unrar par2cmdline-tbb p7zip
     provides:
       http: 8080
