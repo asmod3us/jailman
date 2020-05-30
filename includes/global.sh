@@ -129,7 +129,7 @@ initblueprint() {
 	blueprint=jail_${1}_blueprint
 	varlist=blueprint_${!blueprint}_vars
 
-	for var in ${!varlist} ${global_jails_vars}
+	for var in ${!varlist:-} ${global_jails_vars}
 	do
 		value="jail_${1}_$var"
 		val=${!value:-}
