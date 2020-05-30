@@ -194,13 +194,6 @@ do
 	esac
 done
 
-echo "after options parse:"
-echo "installjails=${installjails[*]}"
-echo "redojails=${redojails[*]}"
-echo "updatejails=${updatejails[*]}"
-echo "destroyjails=${destroyjails[*]}"
-echo "upgradejails=${upgradejails[*]}"
-
 # auto detect iocage install location
 global_dataset_iocage=$(zfs get -H -o value mountpoint "$(iocage get -p)"/iocage)
 global_dataset_iocage=${global_dataset_iocage#/mnt/}
