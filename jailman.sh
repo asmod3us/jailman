@@ -10,7 +10,7 @@ set -o pipefail  # Use last non-zero exit code in a pipeline
 
 # adapted from https://github.com/bpm-rocks/strict
 # $1: status from failed command
-function errexit() {
+errexit() {
 	local err=$?
 	local code="${1:-1}"
 	echo "ERR While running jailman: status $code" >&2
@@ -66,6 +66,10 @@ function errexit() {
 # trap ERR to provide an error handler whenever a command exits nonzero
 #  this is a more verbose version of set -o errexit
 trap 'errexit' ERR
+
+warn() {
+    echo "$0:" "$@" >&2
+}
 
 # Important defines:
 # shellcheck disable=SC2046
@@ -211,7 +215,7 @@ else
 	echo "jails to destroy ${destroyjails[@]}"
 	for jail in "${destroyjails[@]}"
 	do
-		iocage destroy -f "${jail}"
+		iocage destroy -f "${jail}" || warn "destroy failed for ${jail}"
 		cleanupblueprint "${jail}"
 	done
 
