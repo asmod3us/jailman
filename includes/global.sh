@@ -75,7 +75,7 @@ do
 	fi
 done
 
-if [ -z "${!jailinterfaces}" ]; then 
+if [ -z "${!jailinterfaces:-}" ]; then 
 	jailinterfaces="vnet0:bridge0"
 else
 	jailinterfaces=${!jailinterfaces}
