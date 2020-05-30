@@ -15,7 +15,7 @@ archive=${blueprint_sabnzbd3_source_version}.tar.gz
 target=/usr/local/share/sabnzbd3
 
 iocage exec "$1" mkdir -p $target
-iocage exec "$1" "curl -qsL https://github.com/sabnzbd/sabnzbd/archive/"$archive" | tar -xvzf - --strip-components 1 -C $target"
+iocage exec "$1" "curl -qsL https://github.com/sabnzbd/sabnzbd/archive/$archive | tar -xvzf - --strip-components 1 -C $target"
 cp "${includes_dir}"/build.sh "${jail_root}"/root/
 iocage exec "$1" bash /root/build.sh $target
 cp "${includes_dir}"/sabnzbd3.rc "${jail_root}"/usr/local/etc/rc.d/sabnzbd
