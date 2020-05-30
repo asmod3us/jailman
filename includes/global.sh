@@ -24,19 +24,20 @@ parse_yaml() {
 
 # automatic update function
 gitupdate() {
+BRANCH=${1:-}
 if [ "$(git config --get remote.origin.url)" = "https://github.com/Ornias1993/jailman" ]
 then
 	echo "The repository has been moved, please reinstall using the new repository: jailmanager/jailman"
 	exit 1
 fi
-if [ "$1" = "" ] || [ "$1" = "HEAD" ];
+if [ -z "$BRANCH" ] || [ "$BRANCH" = "HEAD" ];
 then
 	echo "Detatched or invalid GIT HEAD detected, please reinstall"
 else
-	echo "checking for updates using Branch: $1"
+	echo "checking for updates using Branch: $BRANCH"
 	git fetch > /dev/null 2>&1
 	git update-index -q --refresh > /dev/null 2>&1
-	CHANGED=$(git diff --name-only "$1")
+	CHANGED=$(git diff --name-only "$BRANCH")
 	if [ -n "$CHANGED" ];
 	then
 		echo "script requires update"
