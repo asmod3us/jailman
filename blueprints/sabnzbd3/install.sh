@@ -14,7 +14,7 @@ initblueprint "$1"
 archive=${source_version}.tar.gz
 target=/usr/local/share/sabnzbd3
 iocage exec "$1" mkdir -p $target
-iocage exec "$1" curl -qsL https://github.com/sabnzbd/sabnzbd/archive/$archive | tar -xvzf - --strip-components 1 -C $target
+iocage exec "$1" curl -qsL https://github.com/sabnzbd/sabnzbd/archive/"$archive" | tar -xvzf - --strip-components 1 -C $target
 cp "${includes_dir}"/build.sh /mnt/"${global_dataset_iocage}"/jails/"$1"/root/root/
 iocage exec "$1" bash /root/build.sh $target
 iocage exec "$1" cp $target/SABnzbd.py /usr/local/bin/
