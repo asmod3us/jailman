@@ -56,7 +56,7 @@ fi
 jailcreate() {
 jail=${1:-}
 blueprint=${2:-}
-if [ -z $jail ] || [ $blueprint ]; then
+if [ -z $jail ] || [ -z $blueprint ]; then
 	echo "jail and blueprint are required"
 	exit 1
 fi
