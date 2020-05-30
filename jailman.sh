@@ -5,8 +5,8 @@ set -o errtrace  # Make sure any error trap is inherited
 set -o nounset   # Disallow expansion of unset variables
 set -o pipefail  # Use last non-zero exit code in a pipeline
 
-# set -x
-# shopt -s extdebug
+set -x
+shopt -s extdebug
 
 # adapted from https://github.com/bpm-rocks/strict
 # $1: status from failed command
@@ -237,9 +237,11 @@ else
 	echo "jails to install ${installjails[@]}"
 	for jail in "${installjails[@]}"
 	do
-		blueprint_name=jail_${jail}_blueprint
-		blueprint=${!blueprint_name:-}
-		if [ -z "${blueprint}" ]
+		blueprint=jail_${jail}_blueprint
+		echo "blueprint name: $blueprint"
+		echo "blueprint: ${!blueprint}"
+		#blueprint=${!blueprint_name:-}
+		if [ -z "${!blueprint:-}" ]
 		then
 			echo "Config for ${jail} in config.yml incorrect. Please check your config."
 			exit 1
