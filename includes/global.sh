@@ -52,6 +52,13 @@ fi
 }
 
 jailcreate() {
+jail=${1:-}
+blueprint=${2:-}
+if [ -z $jail ] || [ $blueprint ]; then
+	echo "jail and blueprint are required"
+	exit 1
+fi
+
 echo "Checking config..."
 blueprintpkgs="blueprint_${2}_pkgs"
 blueprintports="blueprint_${2}_ports"
