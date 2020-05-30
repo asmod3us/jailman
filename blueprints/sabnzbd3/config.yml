@@ -1,4 +1,5 @@
 blueprint:
-  example:
-    pkgs: git python3 py37-pip
-
+  sabnzbd3:
+    pkgs: git python3 py37-pip py37-sqlite3
+    provides:
+      http: 8080
