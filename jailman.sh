@@ -230,7 +230,7 @@ else
 	for jail in "${installjails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
-		if [ -z "${!blueprint}" ]
+		if [ -z "${!blueprint:-}" ]
 		then
 			echo "Config for ${jail} in config.yml incorrect. Please check your config."
 			exit 1
@@ -254,7 +254,7 @@ else
 	for jail in "${redojails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
-		if [ -z "${!blueprint}" ]
+		if [ -z "${!blueprint:-}" ]
 		then
 			echo "Config for ${jail} in config.yml incorrect. Please check your config."
 			exit 1
@@ -279,7 +279,7 @@ else
 	for jail in "${updatejails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
-		if [ -z "${!blueprint}" ]
+		if [ -z "${!blueprint:-}" ]
 		then
 			echo "Config for ${jail} in config.yml incorrect. Please check your config."
 			exit 1
@@ -305,7 +305,7 @@ else
 	for jail in "${upgradejails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
-		if [ -z "${!blueprint}" ]
+		if [ -z "${!blueprint:-}" ]
 			then
 			echo "Config for ${jail} in config.yml incorrect. Please check your config."
 			exit 1
