@@ -10,6 +10,10 @@ trap "ERR during sabnzbd3 install" ERR
 
 initblueprint "$1"
 
+createmount "$1" "${global_dataset_downloads}" /mnt/downloads
+createmount "$1" "${global_dataset_downloads}"/complete /mnt/downloads/complete
+createmount "$1" "${global_dataset_downloads}"/incomplete /mnt/downloads/incomplete
+
 #source_version=3.0.0Beta1
 archive=${blueprint_sabnzbd3_source_version}.tar.gz
 target=/usr/local/share/sabnzbd3
