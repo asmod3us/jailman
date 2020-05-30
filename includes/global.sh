@@ -64,7 +64,7 @@ blueprintextraconf="blueprint_${2}_custom_iocage"
 jailextraconf="jail_${1}_custom_iocage"
 setextra="${!blueprintextraconf:-} ${!jailextraconf:-}"
 reqvars=blueprint_${2}_reqvars
-reqvars="${!reqvars} ${global_jails_reqvars}"
+reqvars="${!reqvars:-} ${global_jails_reqvars:-}"
 
 for reqvar in $reqvars
 do
