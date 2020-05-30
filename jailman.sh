@@ -71,6 +71,31 @@ warn() {
     echo "$0:" "$@" >&2
 }
 
+usage() {
+	echo "Usage:"
+	echo "$0"
+	echo "-h"
+	echo "   Help (this output)"
+	echo "-i [_jailname] [_jailname1] ... [_jailnameN]"
+	echo "   Install jails"
+	echo "-r [_jailname] [_jailname1] ... [_jailnameN]"
+	echo "   Reinstall jails (destroy then create)"
+	echo "-u [_jailname] [_jailname1] ... [_jailnameN]"
+	echo "   Run jail upgrade script"
+	echo "-d [_jailname] [_jailname1] ... [_jailnameN]"
+	echo "   Destroy jails"
+	echo "-g [_jailname] [_jailname1] ... [_jailnameN]"
+	echo "    Update the jail and any packages inside"
+	echo ""
+	echo " Examples:"
+	echo ""
+	echo "    # $0 -i plex"
+	echo "      Install plex"
+	echo ""
+	echo "    # $0 -d plex transmission"
+	echo "      Uninstall (DESTROY) plex and transmission"
+}
+
 # Important defines:
 # shellcheck disable=SC2046
 SCRIPT_NAME=$(basename $(test -L "${BASH_SOURCE[0]}" && readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}"));
