@@ -148,6 +148,7 @@ initblueprint() {
 		fi
 	done
 
+	declare -g "blueprint_dir=${SCRIPT_DIR}/blueprints/${!blueprint}"
 	declare -g "includes_dir=${SCRIPT_DIR}/blueprints/${!blueprint}/includes"
 
 	if [ -f "/mnt/${global_dataset_config}/${1}/INSTALLED" ]; then
