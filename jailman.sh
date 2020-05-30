@@ -207,15 +207,17 @@ global_dataset_iocage=${global_dataset_iocage#/mnt/}
 export global_dataset_iocage
 
 # Parse the Config YAML
-# shellcheck disable=SC2046
-for configpath in "${SCRIPT_DIR}"/blueprints/*/config.yml; do ! eval $(parse_yaml "${configpath}"); done
+for configpath in "${SCRIPT_DIR}"/blueprints/*/config.yml; do
+	# shellcheck disable=SC2046
+	! eval $(parse_yaml "${configpath}")
+done
 
 # shellcheck disable=SC2046
 eval $(parse_yaml "${SCRIPT_DIR}/includes/global.yml")
 # shellcheck disable=SC2046
 eval $(parse_yaml "${SCRIPT_DIR}/config.yml")
 
-if [ "${global_version}" != "1.3" ]; then
+if [ "${global_version:-}" != "1.3" ]; then
 	echo "You are using old config.yml synatx."
 	echo "Please check the wiki for required changes"
 	exit 1
