@@ -101,6 +101,7 @@ fi
 # Go through the options and put the jails requested in an array
 unset -v sub
 args=("$@")
+echo "args=${args[*]}"
 arglen=${#args[@]}
 
 installjails=()
@@ -109,82 +110,91 @@ updatejails=()
 destroyjails=()
 upgradejails=()
 while getopts ":i:r:u:d:g:h" opt
-   do
-   #Shellcheck on wordsplitting will be disabled. Wordsplitting can't happen, because it's already split using OPTIND.
-     case $opt in
-        i ) installjails=("$OPTARG")
+do
+	#Shellcheck on wordsplitting will be disabled. Wordsplitting can't happen, because it's already split using OPTIND.
+	case $opt in
+		i ) installjails=("$OPTARG")
 			# shellcheck disable=SC2046
 			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
-				echo "at arg $OPTIND"
 				# shellcheck disable=SC2207
-				#installjails+=($(eval "echo \${$OPTIND}"))
 				installjails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
 			done
-            ;;
-        r ) redojails=("$OPTARG")
+			;;
+		r ) redojails=("$OPTARG")
 			# shellcheck disable=SC2046
-            until [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]] || [ -z $(eval "echo \${$OPTIND}") ]; do
+			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
-                redojails+=($(eval "echo \${$OPTIND}"))
-                OPTIND=$((OPTIND + 1))
-            done
-            ;;
-        u ) updatejails=("$OPTARG")
+				redojails+=($(eval "echo \${$OPTIND}"))
+				redo+=("${args[$OPTIND-1]}")
+				OPTIND=$((OPTIND + 1))
+			done
+			;;
+		u ) updatejails=("$OPTARG")
 			# shellcheck disable=SC2046
-            until [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]] || [ -z $(eval "echo \${$OPTIND}") ]; do
+			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
-                updatejails+=($(eval "echo \${$OPTIND}"))
-                OPTIND=$((OPTIND + 1))
-            done
-            ;;
-        d ) destroyjails=("$OPTARG")
+				updatejails+=("${args[$OPTIND-1]}")
+				OPTIND=$((OPTIND + 1))
+			done
+			;;
+		d ) destroyjails=("$OPTARG")
 			# shellcheck disable=SC2046
-            until [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]] || [ -z $(eval "echo \${$OPTIND}") ]; do
+			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
-                destroyjails+=($(eval "echo \${$OPTIND}"))
-                OPTIND=$((OPTIND + 1))
-            done
-            ;;
-	g ) upgradejails=("$OPTARG")
+				destroyjails+=("${args[$OPTIND-1]}")
+				OPTIND=$((OPTIND + 1))
+			done
+			;;
+		g ) upgradejails=("$OPTARG")
 			# shellcheck disable=SC2046
-            until [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]] || [ -z $(eval "echo \${$OPTIND}") ]; do
+			until (( OPTIND > arglen )) || [[ $(eval "echo \${$OPTIND}") =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
-                upgradejails+=($(eval "echo \${$OPTIND}"))
-                OPTIND=$((OPTIND + 1))
-            done
-            ;;
-	h ) 
-	    echo "Usage:"
-            echo "$0 -i "
-            echo "$0 -r "
-            echo "$0 -u "
-            echo "$0 -d  "
-            echo "$0 -g "
-            echo ""
-            echo "   -i to install jails, listed by name, space seperated like this: jackett plex sonarr"
-            echo "   -r to reinstall jails, listed by name, space seperated like this: jackett plex sonarr"
-            echo "   -u to update jails, listed by name, space seperated like this: jackett plex sonarr"
-            echo "   -d to destroy jails, listed by name, space seperated like this: jackett plex sonarrt"
-            echo "   -g to upgrade jails, listed by name, space seperated like this: jackett plex sonarr"
-            echo "   -h help (this output)"
-            exit 0
-            ;;
-	? ) echo "Error: Invalid option was specified -$OPTARG"
-            exit 0
-            ;;
-     esac
+				upgradejails+=("${args[$OPTIND-1]}")
+				OPTIND=$((OPTIND + 1))
+			done
+			;;
+		h ) 
+			echo "Usage:"
+			echo "$0 -i "
+			echo "$0 -r "
+			echo "$0 -u "
+			echo "$0 -d  "
+			echo "$0 -g "
+			echo ""
+			echo "   -i to install jails, listed by name, space seperated like this: jackett plex sonarr"
+			echo "   -r to reinstall jails, listed by name, space seperated like this: jackett plex sonarr"
+			echo "   -u to update jails, listed by name, space seperated like this: jackett plex sonarr"
+			echo "   -d to destroy jails, listed by name, space seperated like this: jackett plex sonarrt"
+			echo "   -g to upgrade jails, listed by name, space seperated like this: jackett plex sonarr"
+			echo "   -h help (this output)"
+			exit 0
+			;;
+		? ) echo "Error: Invalid option was specified -$OPTARG"
+			exit 0
+			;;
+	esac
 done
 
+echo "after options parse:"
+echo "installjails=${installjails[*]}"
+echo "redojails=${redojails[*]}"
+echo "updatejails=${updatejails[*]}"
+echo "destroyjails=${destroyjails[*]}"
+echo "upgradejails=${upgradejails[*]}"
+
 # auto detect iocage install location
-global_dataset_iocage=$(zfs get -H -o value mountpoint $(iocage get -p)/iocage)
+global_dataset_iocage=$(zfs get -H -o value mountpoint "$(iocage get -p)"/iocage)
 global_dataset_iocage=${global_dataset_iocage#/mnt/}
 export global_dataset_iocage
 
 # Parse the Config YAML
 # shellcheck disable=SC2046
 for configpath in "${SCRIPT_DIR}"/blueprints/*/config.yml; do ! eval $(parse_yaml "${configpath}"); done
+
+# shellcheck disable=SC2046
 eval $(parse_yaml "${SCRIPT_DIR}/includes/global.yml")
+# shellcheck disable=SC2046
 eval $(parse_yaml "${SCRIPT_DIR}/config.yml")
 
 if [ "${global_version}" != "1.3" ]; then
