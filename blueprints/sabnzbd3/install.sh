@@ -11,7 +11,8 @@ trap "ERR during sabnzbd3 install" ERR
 initblueprint "$1"
 
 #source_version=3.0.0Beta1
-archive=${source_version}.tar.gz
+
+archive=${!blueprint_$1_source_version}.tar.gz
 target=/usr/local/share/sabnzbd3
 
 iocage exec "$1" mkdir -p $target
