@@ -15,4 +15,4 @@ python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install -r requirements.txt -U
 python3 tools/make_mo.py
-sed -e 's|#!/usr/bin/python3|#!usr/bin/env python|' SABnzbd.py
+sed -e 's|#!/usr/bin/python3|#!/usr/bin/env python|' SABnzbd.py
