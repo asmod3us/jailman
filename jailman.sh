@@ -196,7 +196,7 @@ else
 		then
 			echo "Updating $jail"
 			iocage update "${jail}"
-			iocage exec "${jail}" "pkg update && pkg upgrade -y" && "${SCRIPT_DIR}"/jails/"${!blueprint}"/update.sh
+			iocage exec "${jail}" "pkg update && pkg upgrade -y" && "${SCRIPT_DIR}"/blueprints/"${!blueprint}"/update.sh
 			iocage restart "${jail}"
 			iocage start "${jail}"
 		else
