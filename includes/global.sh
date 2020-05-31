@@ -31,7 +31,9 @@ gitupdate() {
 
 	if [ "$(git config --get remote.origin.url)" = "https://github.com/Ornias1993/jailman" ]
 	then
-		echo "The repository has been moved, please reinstall using the new repository: jailmanager/jailman"
+		git remote set-url origin https://github.com/jailmanager/jailman
+		echo "The repository has moved recently, we have pointed it to the right location."
+		echo "Please invoke the script again."
 		exit 1
 	fi
 	if [ -z "$branch" ] || [ "$branch" = "HEAD" ];
