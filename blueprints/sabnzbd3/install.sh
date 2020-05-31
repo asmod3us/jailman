@@ -15,7 +15,7 @@ createmount "$1" "${global_dataset_downloads}"/complete /mnt/downloads/complete
 createmount "$1" "${global_dataset_downloads}"/incomplete /mnt/downloads/incomplete
 
 target=/usr/local/share/sabnzbd3
-latest_release_url=$(curl -qs https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq '.[0].assets | map(select(.name | match("src"))) | .[0].browser_download_url')
+latest_tarball_url=$(curl -qs https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq '.[0].tarball_url')
 
 iocage exec "$1" mkdir -p $target
 iocage exec "$1" "curl -qsL $latest_release_url | tar -xzf - --strip-components 1 -C $target"
