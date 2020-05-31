@@ -206,8 +206,7 @@ fi
 
 # Check and Execute requested jail destructions
 if [ ${#destroyjails[@]} -gt 0 ]; then
-	# shellcheck disable=SC2124,SC2145
-	echo "jails to destroy ${destroyjails[@]}"
+	echo "jails to destroy" "${destroyjails[@]}"
 	for jail in "${destroyjails[@]}"
 	do
 		iocage destroy -f "${jail}" || warn "destroy failed for ${jail}"
@@ -218,8 +217,7 @@ fi
 
 # Check and Execute requested jail Installs
 if [ ${#installjails[@]} -gt 0 ]; then
-	# shellcheck disable=SC2145
-	echo "jails to install ${installjails[@]}"
+	echo "jails to install" "${installjails[@]}"
 	for jail in "${installjails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
@@ -241,8 +239,7 @@ fi
 
 # Check and Execute requested jail Reinstalls
 if [ ${#redojails[@]} -gt 0 ]; then
-	# shellcheck disable=SC2145
-	echo "jails to reinstall ${redojails[@]}"
+	echo "jails to reinstall" "${redojails[@]}"
 	for jail in "${redojails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
@@ -263,8 +260,7 @@ fi
 
 # Check and Execute requested jail Updates
 if [ ${#updatejails[@]} -gt 0 ]; then
-	# shellcheck disable=SC2145
-	echo "jails to update ${updatejails[@]}"
+	echo "jails to update" "${updatejails[@]}"
 	for jail in "${updatejails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
@@ -287,8 +283,7 @@ fi
 
 # Check and Execute requested jail Upgrades
 if [ ${#upgradejails[@]} -gt 0 ]; then
-	# shellcheck disable=SC2145
-	echo "jails to update ${upgradejails[@]}"
+	echo "jails to update" "${upgradejails[@]}"
 	for jail in "${upgradejails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
