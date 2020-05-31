@@ -10,7 +10,7 @@ trap "ERR during sabnzbd3 update" ERR
 initblueprint "$1"
 
 # stop service
-iocage exec "$1" service sabnzbd3 stop
+iocage exec "$1" service sabnzbd stop
 
 # download latest
 latest_tarball_url=$(curl -qs https://api.github.com/repos/sabnzbd/sabnzbd/releases | jq '.[0].tarball_url')
