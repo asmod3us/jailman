@@ -24,44 +24,51 @@ parse_yaml() {
 
 # automatic update function
 gitupdate() {
-GITBRANCH=$(git for-each-ref --format='%(upstream:short)' "$(git symbolic-ref -q HEAD)")
-BRANCH=${GITBRANCH:-}
+	local gitbranch  branch
 
-if [ "$(git config --get remote.origin.url)" = "https://github.com/Ornias1993/jailman" ]
-then
-	echo "The repository has been moved, please reinstall using the new repository: jailmanager/jailman"
-	exit 1
-fi
-if [ -z "$BRANCH" ] || [ "$BRANCH" = "HEAD" ];
-then
-	echo "Detatched or invalid GIT HEAD detected, please reinstall"
-else
-	echo "checking for updates using Branch: $BRANCH"
-	git fetch > /dev/null 2>&1
-	git update-index -q --refresh > /dev/null 2>&1
-	CHANGED=$(git diff --name-only "$BRANCH")
-	if [ -n "$CHANGED" ];
+	gitbranch=$(git for-each-ref --format='%(upstream:short)' "$(git symbolic-ref -q HEAD)")
+	branch=${gitbranch:-}
+
+	if [ "$(git config --get remote.origin.url)" = "https://github.com/Ornias1993/jailman" ]
 	then
-		echo "script requires update"
-		git reset --hard > /dev/null 2>&1
-		git pull > /dev/null 2>&1
-		echo "script updated, please restart the script manually"
+		echo "The repository has been moved, please reinstall using the new repository: jailmanager/jailman"
 		exit 1
-	else
-		echo "script up-to-date"
 	fi
-fi
+	if [ -z "$branch" ] || [ "$branch" = "HEAD" ];
+	then
+		echo "Detatched or invalid GIT HEAD detected, please reinstall"
+	else
+		echo "checking for updates using Branch: $branch"
+		git fetch > /dev/null 2>&1
+		git update-index -q --refresh > /dev/null 2>&1
+		CHANGED=$(git diff --name-only "$branch")
+		if [ -n "$CHANGED" ];
+		then
+			echo "script requires update"
+			git reset --hard > /dev/null 2>&1
+			git pull > /dev/null 2>&1
+			echo "script updated, please restart the script manually"
+			exit 1
+		else
+			echo "script up-to-date"
+		fi
+	fi
 }
 
 jailcreate() {
-	jail=${1:-}
-	blueprint=${2:-}
+	local jail  blueprint
+
+	jail=${1:?}
+	blueprint=${2:?}
+
 	if [ -z $jail ] || [ -z $blueprint ]; then
 		echo "jail and blueprint are required"
 		exit 1
 	fi
 
 	echo "Checking config..."
+	local blueprintpkgs blueprintports jailinterfaces jailip4 jailgateway jaildhcp setdhcp blueprintextraconf jailextraconf setextra reqvars reqvars
+
 	blueprintpkgs="blueprint_${blueprint}_pkgs"
 	blueprintports="blueprint_${blueprint}_ports"
 	jailinterfaces="jail_${jail}_interfaces"
@@ -95,7 +102,7 @@ jailcreate() {
 		setdhcp="on"
 	fi
 
-	echo "Creating jail for $1"
+	echo "Creating jail for $jail"
 	pkgs="$(sed 's/[^[:space:]]\{1,\}/"&"/g;s/ /,/g' <<<"${global_jails_pkgs:?} ${!blueprintpkgs}")"
 	echo '{"pkgs":['"${pkgs}"']}' > /tmp/pkg.json
 	if [ "${setdhcp}" == "on" ]
@@ -134,6 +141,9 @@ jailcreate() {
 }
 
 initblueprint() {
+	local blueprint_name blueprint varlist linkblueprint linkvarlist value val linkvalue linkval
+	blueprint_name=${1:?}
+
 	blueprint=jail_${1}_blueprint
 	varlist=blueprint_${!blueprint}_vars
 
@@ -192,6 +202,10 @@ cleanupblueprint() {
 export -f initblueprint
 
 exitblueprint() {
+local blueprint_name
+blueprint_name=${1:?}
+
+blueprint=jail_${1}_blueprint
 blueprint="jail_${1}_blueprint" 
 traefik_service_port="blueprint_${!blueprint}_traefik_service_port"
 traefik_service_port="${!traefik_service_port}"
@@ -274,11 +288,23 @@ elif [ -n "${traefik_service_port}" ]; then
 else
 	echo "Please consult the wiki for instructions connecting to your newly installed jail"
 fi
+
+
+echo "DO NOT DELETE THIS FILE" >> "/mnt/${global_dataset_config}/${1}/INSTALLED"
+echo "Jail $1 using blueprint ${!blueprint}, installed successfully."
+if [[ ! "${2}" ]]; then
+	echo "Please consult the wiki for instructions connecting to your newly installed jail"
+else
+	echo ${2}
+fi
+
 }
 export -f exitblueprint
 
 
 createmount() {
+	local jail dataset mountpoint fstab
+
 	jail=${1:-}
 	dataset=${2:-}
 	mountpoint=${3:-}
