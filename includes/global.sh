@@ -54,84 +54,83 @@ fi
 }
 
 jailcreate() {
-jail=${1:-}
-blueprint=${2:-}
-if [ -z $jail ] || [ -z $blueprint ]; then
-	echo "jail and blueprint are required"
-	exit 1
-fi
-
-echo "Checking config..."
-blueprintpkgs="blueprint_${2}_pkgs"
-blueprintports="blueprint_${2}_ports"
-jailinterfaces="jail_${1}_interfaces"
-jailip4="jail_${1}_ip4_addr"
-jailgateway="jail_${1}_gateway"
-jaildhcp="jail_${1}_dhcp"
-setdhcp=${!jaildhcp}
-blueprintextraconf="blueprint_${2}_custom_iocage"
-jailextraconf="jail_${1}_custom_iocage"
-setextra="${!blueprintextraconf:-} ${!jailextraconf:-}"
-reqvars=blueprint_${2}_reqvars
-reqvars="${!reqvars:-} ${global_jails_reqvars:-}"
-
-for reqvar in $reqvars
-do
-	varname=jail_${1}_${reqvar}
-	if [ -z "${!varname}" ]; then
-	echo "$varname can't be empty"
-	exit 1
-	fi
-done
-
-if [ -z "${!jailinterfaces:-}" ]; then 
-	jailinterfaces="vnet0:bridge0"
-else
-	jailinterfaces=${!jailinterfaces}
-fi
-
-if [ -z "${setdhcp}" ] && [ -z "${!jailip4}" ] && [ -z "${!jailgateway}" ]; then 
-	echo 'no network settings specified in config.yml, defaulting to dhcp="on"'
-	setdhcp="on"
-fi
-
-echo "Creating jail for $1"
-pkgs="$(sed 's/[^[:space:]]\{1,\}/"&"/g;s/ /,/g' <<<"${global_jails_pkgs:?} ${!blueprintpkgs}")"
-echo '{"pkgs":['"${pkgs}"']}' > /tmp/pkg.json
-if [ "${setdhcp}" == "on" ]
-then
-	if ! iocage create -n "${1}" -p /tmp/pkg.json -r "${global_jails_version:?}" interfaces="${jailinterfaces}" dhcp="on" vnet="on" allow_raw_sockets="1" boot="on" ${setextra} -b
-	then
-		echo "Failed to create jail"
+	jail=${1:-}
+	blueprint=${2:-}
+	if [ -z $jail ] || [ -z $blueprint ]; then
+		echo "jail and blueprint are required"
 		exit 1
 	fi
-else
-	if ! iocage create -n "${1}" -p /tmp/pkg.json -r "${global_jails_version}" interfaces="${jailinterfaces}" ip4_addr="vnet0|${!jailip4}" defaultrouter="${!jailgateway}" vnet="on" allow_raw_sockets="1" boot="on" ${setextra} -b
-	then
-		echo "Failed to create jail"
-		exit 1
+
+	echo "Checking config..."
+	blueprintpkgs="blueprint_${blueprint}_pkgs"
+	blueprintports="blueprint_${blueprint}_ports"
+	jailinterfaces="jail_${jail}_interfaces"
+	jailip4="jail_${jail}_ip4_addr"
+	jailgateway="jail_${jail}_gateway"
+	jaildhcp="jail_${jail}_dhcp"
+	setdhcp=${!jaildhcp}
+	blueprintextraconf="blueprint_${blueprint}_custom_iocage"
+	jailextraconf="jail_${jail}_custom_iocage"
+	setextra="${!blueprintextraconf:-} ${!jailextraconf:-}"
+	reqvars=blueprint_${blueprint}_reqvars
+	reqvars="${!reqvars:-} ${global_jails_reqvars:-}"
+
+	for reqvar in $reqvars
+	do
+		varname=jail_${jail}_${reqvar}
+		if [ -z "${!varname}" ]; then
+			echo "$varname can't be empty"
+			exit 1
+		fi
+	done
+
+	if [ -z "${!jailinterfaces:-}" ]; then
+		jailinterfaces="vnet0:bridge0"
+	else
+		jailinterfaces=${!jailinterfaces}
 	fi
-fi
 
-rm /tmp/pkg.json
-echo "creating jail config directory"
-createmount "${1}" "${global_dataset_config}" || exit 1
-createmount "${1}" "${global_dataset_config}"/"${1}" /config || exit 1
+	if [ -z "${setdhcp}" ] && [ -z "${!jailip4}" ] && [ -z "${!jailgateway}" ]; then
+		echo 'no network settings specified in config.yml, defaulting to dhcp="on"'
+		setdhcp="on"
+	fi
 
+	echo "Creating jail for $1"
+	pkgs="$(sed 's/[^[:space:]]\{1,\}/"&"/g;s/ /,/g' <<<"${global_jails_pkgs:?} ${!blueprintpkgs}")"
+	echo '{"pkgs":['"${pkgs}"']}' > /tmp/pkg.json
+	if [ "${setdhcp}" == "on" ]
+	then
+		if ! iocage create -n "${jail}" -p /tmp/pkg.json -r "${global_jails_version:?}" interfaces="${jailinterfaces}" dhcp="on" vnet="on" allow_raw_sockets="1" boot="on" ${setextra} -b
+		then
+			echo "Failed to create jail"
+			exit 1
+		fi
+	else
+		if ! iocage create -n "${jail}" -p /tmp/pkg.json -r "${global_jails_version}" interfaces="${jailinterfaces}" ip4_addr="vnet0|${!jailip4}" defaultrouter="${!jailgateway}" vnet="on" allow_raw_sockets="1" boot="on" ${setextra} -b
+		then
+			echo "Failed to create jail"
+			exit 1
+		fi
+	fi
 
-# Create and Mount portsnap
-createmount "${1}" "${global_dataset_config}"/portsnap || exit 1
-createmount "${1}" "${global_dataset_config}"/portsnap/db /var/db/portsnap || exit 1
-createmount "${1}" "${global_dataset_config}"/portsnap/ports /usr/ports || exit 1
-if [ "${!blueprintports:-}" == "true" ]
-then
-	echo "Mounting and fetching ports"
-	iocage exec "${1}" "if [ -z /usr/ports ]; then portsnap fetch extract; else portsnap auto; fi"
-else
-	echo "Ports not enabled for blueprint, skipping"
-fi
+	rm /tmp/pkg.json
+	echo "creating jail config directory"
+	createmount "${jail}" "${global_dataset_config}" || exit 1
+	createmount "${jail}" "${global_dataset_config}"/"${jail}" /config || exit 1
 
-echo "Jail creation completed for ${1}"
+	# Create and Mount portsnap
+	createmount "${jail}" "${global_dataset_config}"/portsnap || exit 1
+	createmount "${jail}" "${global_dataset_config}"/portsnap/db /var/db/portsnap || exit 1
+	createmount "${jail}" "${global_dataset_config}"/portsnap/ports /usr/ports || exit 1
+	if [ "${!blueprintports:-}" == "true" ]
+	then
+		echo "Mounting and fetching ports"
+		iocage exec "${jail}" "if [ -z /usr/ports ]; then portsnap fetch extract; else portsnap auto; fi"
+	else
+		echo "Ports not enabled for blueprint, skipping"
+	fi
+
+	echo "Jail creation completed for ${jail}"
 }
 
 initblueprint() {
@@ -144,7 +143,7 @@ initblueprint() {
 		val=${!value:-}
 		declare -g "${var}=${val}"
 
-		if [[ "${var}" =~ ^link_.* ]]; 
+		if [[ "${var}" =~ ^link_.* ]];
 		then
 			linkblueprint=jail_${val}_blueprint
 			linkvarlist=blueprint_${!linkblueprint}_vars
