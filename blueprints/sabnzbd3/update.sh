@@ -23,5 +23,4 @@ iocage exec "$1" "curl -qsL $latest_tarball_url | tar -xzf - --strip-components 
 # rebuild
 iocage exec "$1" bash /root/build.sh $target
 
-# start service
-iocage exec "$1" service sabnzbd start
+# service start will be done automatically by iocage restart, as it is enabled in rc.conf
