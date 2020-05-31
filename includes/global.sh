@@ -78,9 +78,9 @@ jailcreate() {
 	setdhcp=${!jaildhcp}
 	blueprintextraconf="blueprint_${blueprint}_custom_iocage"
 	jailextraconf="jail_${jail}_custom_iocage"
-	setextra="${!blueprintextraconf:-} ${!jailextraconf:-}"
+	setextra="${!blueprintextraconf:-}${!jailextraconf:+ ${!jailextraconf}}"
 	reqvars=blueprint_${blueprint}_reqvars
-	reqvars="${!reqvars:-} ${global_jails_reqvars:-}"
+	reqvars="${!reqvars:-}${global_jails_reqvars:+ ${!global_vars_reqvars}}"
 
 	for reqvar in $reqvars
 	do
