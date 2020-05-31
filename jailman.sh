@@ -5,6 +5,7 @@ set -o errtrace  # Make sure any error trap is inherited
 set -o nounset   # Disallow expansion of unset variables
 set -o pipefail  # Use last non-zero exit code in a pipeline
 
+set -o functrace
 set -x
 shopt -s extdebug
 
@@ -238,9 +239,8 @@ else
 	for jail in "${installjails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
-		echo "blueprint name: $blueprint"
-		echo "blueprint: ${!blueprint}"
-		#blueprint=${!blueprint_name:-}
+		echo "blueprint var: $blueprint"
+		echo "blueprint val: ${!blueprint}"
 		if [ -z "${!blueprint:-}" ]
 		then
 			echo "Config for ${jail} in config.yml incorrect. Please check your config."
