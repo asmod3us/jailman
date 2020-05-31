@@ -5,9 +5,9 @@ set -o errtrace  # Make sure any error trap is inherited
 set -o nounset   # Disallow expansion of unset variables
 set -o pipefail  # Use last non-zero exit code in a pipeline
 
-set -o functrace
-set -x
-shopt -s extdebug
+#set -o functrace
+#set -x
+#shopt -s extdebug
 
 # adapted from https://github.com/bpm-rocks/strict
 # $1: status from failed command

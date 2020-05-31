@@ -144,7 +144,7 @@ initblueprint() {
 	local blueprint_name blueprint varlist linkblueprint linkvarlist value val linkvalue linkval
 	blueprint_name=${1:?}
 
-	blueprint=jail_${1}_blueprint
+	blueprint=jail_${blueprint_name}_blueprint
 	varlist=blueprint_${!blueprint}_vars
 
 	for var in ${!varlist:-} ${global_jails_vars}
