@@ -143,15 +143,12 @@ do
 	#Shellcheck on wordsplitting will be disabled. Wordsplitting can't happen, because it's already split using OPTIND.
 	case $opt in
 		i ) installjails=("$OPTARG")
-			# shellcheck disable=SC2046
 			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
-				# shellcheck disable=SC2207
 				installjails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
 			done
 			;;
 		r ) redojails=("$OPTARG")
-			# shellcheck disable=SC2046
 			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
 				# shellcheck disable=SC2207
 				redojails+=($(eval "echo \${$OPTIND}"))
@@ -160,25 +157,19 @@ do
 			done
 			;;
 		u ) updatejails=("$OPTARG")
-			# shellcheck disable=SC2046
 			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
-				# shellcheck disable=SC2207
 				updatejails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
 			done
 			;;
 		d ) destroyjails=("$OPTARG")
-			# shellcheck disable=SC2046
 			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
-				# shellcheck disable=SC2207
 				destroyjails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
 			done
 			;;
 		g ) upgradejails=("$OPTARG")
-			# shellcheck disable=SC2046
 			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
-				# shellcheck disable=SC2207
 				upgradejails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
 			done
