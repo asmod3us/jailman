@@ -130,7 +130,6 @@ fi
 # Go through the options and put the jails requested in an array
 unset -v sub
 args=("$@")
-echo "args=${args[*]}"
 arglen=${#args[@]}
 
 installjails=()
@@ -150,9 +149,7 @@ do
 			;;
 		r ) redojails=("$OPTARG")
 			until (( OPTIND > arglen )) || [[ ${args[$OPTIND-1]} =~ ^-.* ]]; do
-				# shellcheck disable=SC2207
-				redojails+=($(eval "echo \${$OPTIND}"))
-				redo+=("${args[$OPTIND-1]}")
+				redojails+=("${args[$OPTIND-1]}")
 				OPTIND=$((OPTIND + 1))
 			done
 			;;
@@ -208,9 +205,7 @@ if [ "${global_version:-}" != "1.3" ]; then
 fi
 
 # Check and Execute requested jail destructions
-if [ ${#destroyjails[@]} -eq 0 ]; then
-	echo "No jails to destroy"
-else
+if [ ${#destroyjails[@]} -gt 0 ]; then
 	# shellcheck disable=SC2124,SC2145
 	echo "jails to destroy ${destroyjails[@]}"
 	for jail in "${destroyjails[@]}"
@@ -222,15 +217,12 @@ else
 fi
 
 # Check and Execute requested jail Installs
-if [ ${#installjails[@]} -eq 0 ]; then
-	echo "No jails to install"
-else
+if [ ${#installjails[@]} -gt 0 ]; then
 	# shellcheck disable=SC2145
 	echo "jails to install ${installjails[@]}"
 	for jail in "${installjails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
-		echo "blueprint var: $blueprint"
 		echo "blueprint val: ${!blueprint}"
 		if [ -z "${!blueprint:-}" ]
 		then
@@ -248,9 +240,7 @@ else
 fi
 
 # Check and Execute requested jail Reinstalls
-if [ ${#redojails[@]} -eq 0 ]; then
-	echo "No jails to ReInstall"
-else
+if [ ${#redojails[@]} -gt 0 ]; then
 	# shellcheck disable=SC2145
 	echo "jails to reinstall ${redojails[@]}"
 	for jail in "${redojails[@]}"
@@ -272,9 +262,7 @@ else
 fi
 
 # Check and Execute requested jail Updates
-if [ ${#updatejails[@]} -eq 0 ]; then
-	echo "No jails to Update"
-else
+if [ ${#updatejails[@]} -gt 0 ]; then
 	# shellcheck disable=SC2145
 	echo "jails to update ${updatejails[@]}"
 	for jail in "${updatejails[@]}"
@@ -298,9 +286,7 @@ else
 fi
 
 # Check and Execute requested jail Upgrades
-if [ ${#upgradejails[@]} -eq 0 ]; then
-	echo "No jails to Upgrade"
-else
+if [ ${#upgradejails[@]} -gt 0 ]; then
 	# shellcheck disable=SC2145
 	echo "jails to update ${upgradejails[@]}"
 	for jail in "${upgradejails[@]}"
