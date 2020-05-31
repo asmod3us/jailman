@@ -1,1 +1,3 @@
-Blueprint for SABnzbd binary newsreader
+# SABnzbd V3
+
+Blueprint for version  3 of the SABnzbd binary newsreader
