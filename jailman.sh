@@ -1,76 +1,24 @@
 #!/usr/local/bin/bash
 
-set -o errexit   # Exit on most errors
-set -o errtrace  # Make sure any error trap is inherited
-set -o nounset   # Disallow expansion of unset variables
-set -o pipefail  # Use last non-zero exit code in a pipeline
+# Important defines:
+SCRIPT_NAME="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")");"
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd);
+export SCRIPT_NAME
+export SCRIPT_DIR
 
-#set -o functrace
-#set -x
-#shopt -s extdebug
+# shellcheck source=includes/libstrict.sh
+source "${SCRIPT_DIR}/includes/libstrict.sh"
 
-# adapted from https://github.com/bpm-rocks/strict
-# $1: status from failed command
-errexit() {
-	local err=$?
-	local code="${1:-1}"
-	echo "ERR While running jailman: status $code" >&2
-	set +o xtrace
+strict::mode
 
-	echo "Error in ${BASH_SOURCE[1]:-unknown}:${BASH_LINENO[0]:-unknown}. '${BASH_COMMAND:-unknown}' exited with status $err" >&2
-	if [[ ${#PIPESTATUS[@]} -gt 1 ]]; then
-		"Pipe status: " "${PIPESTATUS[@]}" >&2
-	fi
+echo "Working directory for jailman.sh is: ${SCRIPT_DIR}"
 
-    local argsList argsLeft i nextArg
-	i=$#
-	nextArg=$#
+#Includes
+# shellcheck source=includes/global_functions.sh
+source "${SCRIPT_DIR}/includes/global_functions.sh"
 
-	if [ ${#FUNCNAME[@]} -gt 2 ]
-	then
-		echo "Stack trace:" >&2
-	else
-		echo "Stack trace unavailable." >&2
-	fi
-
-	while [[ $i -lt ${#BASH_LINENO[@]} ]]; do
-		argsList=()
-
-		if [[ ${#BASH_ARGC[@]} -gt $i && ${#BASH_ARGV[@]} -ge $(( nextArg + BASH_ARGC[i] )) ]]; then
-			for (( argsLeft = BASH_ARGC[i]; argsLeft; --argsLeft )); do
-				# Note: this reverses the order on purpose
-				argsList[$argsLeft]=${BASH_ARGV[nextArg]}
-				(( nextArg ++ ))
-			done
-
-			if [[ ${#argsList[@]} -gt 0 ]]; then
-				printf -v argsList " %q" "${argsList[@]}"
-			else
-				argsList=""
-			fi
-
-			if [[ ${#argsList} -gt 255 ]]; then
-				argsList=${argsList:0:250}...
-			fi
-		else
-			argsList=""
-		fi
-
-		echo "    [$i] ${FUNCNAME[i]:+${FUNCNAME[i]}(): }${BASH_SOURCE[i]}, line ${BASH_LINENO[i - 1]} -> ${FUNCNAME[i]:-${BASH_SOURCE[i]##*/}}$argsList" >&2
-		(( i ++ ))
-	done
-
-	echo "Exiting with status ${code}" >&2
-	exit "${code}"
-}
-
-# trap ERR to provide an error handler whenever a command exits nonzero
-#  this is a more verbose version of set -o errexit
-trap 'errexit' ERR
-
-warn() {
-    echo "$0:" "$@" >&2
-}
+# shellcheck source=includes/blueprint_functions.sh
+source "${SCRIPT_DIR}/includes/blueprint_functions.sh"
 
 usage() {
 	echo "Usage:"
@@ -96,21 +44,6 @@ usage() {
 	echo "    # $0 -d plex transmission"
 	echo "      Uninstall (DESTROY) plex and transmission"
 }
-
-# Important defines:
-SCRIPT_NAME="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")");"
-SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd);
-export SCRIPT_NAME
-export SCRIPT_DIR
-
-echo "Working directory for jailman.sh is: ${SCRIPT_DIR}"
-
-#Includes
-# shellcheck source=includes/global_functions.sh
-source "${SCRIPT_DIR}/includes/global_functions.sh"
-
-# shellcheck source=includes/blueprint_functions.sh
-source "${SCRIPT_DIR}/includes/blueprint_functions.sh"
 
 # Check for root privileges
 if ! [ "$(id -u)" = 0 ]; then

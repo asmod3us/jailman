@@ -1,6 +1,9 @@
 #!/usr/local/bin/bash
 # shellcheck disable=SC1003
 
+# shellcheck source=libstrict.sh
+source "${SCRIPT_DIR}/includes/libstrict.sh"
+
 initblueprint() {
 	local jail_name blueprint varlist linkblueprint linkvarlist value val linkvalue linkval
 	jail_name=${1:?}
