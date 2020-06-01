@@ -135,7 +135,7 @@ eval $(parse_yaml "${SCRIPT_DIR}/includes/global.yml")
 eval $(parse_yaml "${SCRIPT_DIR}/config.yml")
 
 if [ "${global_version:-}" != "1.3" ]; then
-	echo "You are using old config.yml syntax."
+	echo "You are using old config.yml synatx."
 	echo "Please check the wiki for required changes"
 	exit 1
 fi
