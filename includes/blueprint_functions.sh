@@ -58,9 +58,6 @@ initblueprint() {
 export -f initblueprint
 
 cleanupblueprint() {
-	# as this function is called from blueprints we need to re-enable strict mode
-	strict::mode
-
 	local jail_name=${1:?}
 	local status_message=${2:-}
 
