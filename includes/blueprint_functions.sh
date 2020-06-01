@@ -7,6 +7,7 @@ strict::mode
 
 initblueprint() {
 	# as this function is called from blueprints we need to re-enable strict mode
+	source "${SCRIPT_DIR}/includes/libstrict.sh"
 	strict::mode
 
 	local jail_name blueprint varlist linkblueprint linkvarlist value val linkvalue linkval
@@ -133,14 +134,17 @@ exitblueprint() {
 	# If the default config requires post-processing (it always does except for user-custom config in /config), do the post processing.
 	if [ "${traefik_status}" = "preinstalled" ]; then
 		# replace placeholder values.
-		sed -i '' "s|placeholderdashboardhost|${domain_name//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
-		sed -i '' "s|placeholdername|${1//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
-		sed -i '' "s|placeholderurl|${jail_ip}:${traefik_service_port}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
 		# also replace auth related placeholders, because they can be part of custom config files
-		sed -i '' "s|placeholderusers|${traefik_auth_basic//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
-		sed -i '' "s|placeholderauthforward|${traefik_auth_forward//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
-		if [ -n "${traefik_auth_forward}" ] && [ -n "${traefik_auth_basic}" ]; then 
-			echo "cant setup traefik with both basic AND forward auth. Please pick one only."
+		sed -i '' \
+			-e "s|placeholderdashboardhost|${domain_name//&/\\&}|" \
+			-e "s|placeholdername|${1//&/\\&}|" \
+			-e "s|placeholderurl|${jail_ip}:${traefik_service_port}|" \
+			-e "s|placeholderusers|${traefik_auth_basic//&/\\&}|" \
+			-e "s|placeholderauthforward|${traefik_auth_forward//&/\\&}|" \
+			"${traefik_temp}/${jail_name}.toml"
+
+		if [ -n "${traefik_auth_forward}" ] && [ -n "${traefik_auth_basic}" ]; then
+			echo "Cannot setup traefik with both basic AND forward auth. Please pick one only."
 		elif [ -n "${traefik_auth_basic}" ]; then
 			echo "Adding basic auth to Traefik for jail ${jail_name}"
 			users="$(sed 's/[^[:space:]]\{1,\}/"&"/g;s/ /,/g' <<<"${traefik_auth_basic}")"
@@ -152,7 +156,7 @@ exitblueprint() {
 			mv "${traefik_temp}/${jail_name}_auth_basic.toml" "${traefik_dyn}/${jail_name}_auth_basic.toml"
 			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-basic-auth\"|" "${traefik_temp}/${jail_name}.toml"
 			traefik_status="success"
-		elif [ -n "${traefik_auth_forward}" ]; then 
+		elif [ -n "${traefik_auth_forward}" ]; then
 			echo "Adding forward auth to Traefik for jail ${jail_name}"
 			cp "${traefik_includes}/default_auth_forward.toml" "${traefik_temp}/${jail_name}_auth_forward.toml"
 			sed -i '' \
