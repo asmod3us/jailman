@@ -67,9 +67,9 @@ cleanupblueprint() {
 	link_traefik="${!link_traefik:-}"
 	if [ -n "${link_traefik}" ]; then
 		echo "removing remains..."
-		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${1}".toml
-		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${1}"_auth_basic.toml
-		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${1}"_auth_forward.toml
+		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}".toml
+		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}"_auth_basic.toml
+		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}"_auth_forward.toml
 	fi
 }
 export -f cleanupblueprint
