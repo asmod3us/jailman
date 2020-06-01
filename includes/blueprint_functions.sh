@@ -71,6 +71,7 @@ export -f cleanupblueprint
 
 exitblueprint() {
 	# as this function is called from blueprints we need to re-enable strict mode
+	# shellcheck source=libstrict.sh
 	source "${SCRIPT_DIR}/includes/libstrict.sh"
 	strict::mode
 	local jail_name status_message blueprint_name traefik_service_port traefik_includes traefik_status jailip4 jailgateway jaildhcp setdhcp traefik_root traefik_tmp traefik_dyn
