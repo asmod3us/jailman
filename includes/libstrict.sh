@@ -53,10 +53,12 @@ strict::failure() (
 		(( i ++ ))
 	done
 )
+export -f strict::failure
 
 warn() {
 	echo "$0:" "$@" >&2
 }
+export -f warn
 
 strict::mode() {
 	set -o errexit   # =set -e: Exit on most errors
@@ -66,5 +68,7 @@ strict::mode() {
 
 	shopt -s extdebug
 	trap 'strict::failure $?' ERR
+	export BASHOPTS  # run blueprint scripts with same options
 }
+export -f strict::mode
 
