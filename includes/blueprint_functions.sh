@@ -5,6 +5,9 @@
 source "${SCRIPT_DIR}/includes/libstrict.sh"
 
 initblueprint() {
+	# as this function is called from blueprints we need to re-enable strict mode
+	strict::mode
+
 	local jail_name blueprint varlist linkblueprint linkvarlist value val linkvalue linkval
 	jail_name=${1:?}
 
@@ -54,7 +57,13 @@ initblueprint() {
 export -f initblueprint
 
 cleanupblueprint() {
-	link_traefik="jail_${1}_link_traefik"
+	# as this function is called from blueprints we need to re-enable strict mode
+	strict::mode
+
+	local jail_name=${1:?}
+	local status_message=${2:-}
+
+	link_traefik="jail_${jail_name}_link_traefik"
 	link_traefik="${!link_traefik:-}"
 	if [ -n "${link_traefik}" ]; then
 		echo "removing remains..."
@@ -66,36 +75,21 @@ cleanupblueprint() {
 export -f cleanupblueprint
 
 exitblueprint() {
-local jail_name blueprint_name traefik_service_port traefik_includes traefik_status
+	# as this function is called from blueprints we need to re-enable strict mode
+	strict::mode
+	local jail_name blueprint_name traefik_service_port traefik_includes traefik_status
 
-jail_name=${1:?}
-blueprint_name=jail_${1}_blueprint
-blueprint_name="jail_${1}_blueprint" 
-traefik_service_port="blueprint_${!blueprint_name}_traefik_service_port"
-traefik_service_port="${!traefik_service_port}"
-traefik_includes="${SCRIPT_DIR}/blueprints/traefik/includes"
-traefik_status=""
+	jail_name=${1:?}
+	blueprint_name=jail_${jail_name}_blueprint
+	blueprint_name="jail_${jail_name}_blueprint" 
+	traefik_service_port="blueprint_${!blueprint_name}_traefik_service_port"
+	traefik_service_port="${!traefik_service_port}"
+	traefik_includes="${SCRIPT_DIR}/blueprints/traefik/includes"
+	traefik_status=""
 
-# Check if the jail is compatible with Traefik and copy the right default-config for the job.
-if [ -z "${link_traefik}" ] || [ -z "${ip4_addr}" ]; then
-	echo "Traefik-connection not enabled... Skipping connecting this jail to traefik"
-else
-	echo "removing old traefik config..."
-	rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${1}".toml
-	rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${1}"_auth_basic.toml
-	rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${1}"_auth_forward.toml
-	if [ -z "${domain_name}" ]; then
-		echo "domain_name required for connecting to traefik... please add domain_name to config.yml"
-	elif [ -f "/mnt/${global_dataset_config}/${1}/traefik_custom.toml" ]; then
-		echo "Found custom traefik configuration... Copying to traefik..."
-		cp "${includes_dir}"/traefik_custom.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
-		traefik_status="success"
-	elif [ -f "${includes_dir}/traefik_custom.toml" ]; then
-		echo "Found default traefik configuration for this blueprint... Copying to traefik..."
-		cp "${includes_dir}"/traefik_custom.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
-		traefik_status="preinstalled"
-	elif [ -z "${traefik_service_port}" ]; then 
-		echo "Can't connect this jail to traefik... Please add a traefik_service_port to this jail in config.yml..."
+	# Check if the jail is compatible with Traefik and copy the right default-config for the job.
+	if [ -z "${link_traefik}" ] || [ -z "${ip4_addr}" ]; then
+		echo "Traefik-connection not enabled... Skipping connecting this jail to traefik"
 	else
 		echo "No custom traefik configuration found, using default..."
 		cp "${traefik_includes}"/default.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
