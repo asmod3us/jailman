@@ -1,3 +1,4 @@
 blueprint:
   tautulli:
+    traefik_service_port: 8181
     pkgs: python2 py27-sqlite3 py27-openssl git
