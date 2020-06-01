@@ -66,7 +66,7 @@ strict::mode() {
 	set -o nounset   # =set -u: Disallow expansion of unset variables
 	set -o pipefail  #          Use last non-zero exit code in a pipeline
 
-	shopt -s extdebug
+	# shopt -s extdebug
 	trap 'strict::failure $?' ERR
 	export BASHOPTS  # run blueprint scripts with same options
 }
