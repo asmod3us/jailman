@@ -92,6 +92,10 @@ exitblueprint() {
 	jaildhcp="jail_${jail_name}_dhcp"
 	setdhcp=${!jaildhcp}
 
+	traefik_root=/mnt/"${global_dataset_config}"/"${link_traefik}"
+	traefik_tmp=${traefik_root}/temp
+	traefik_dyn=${traefik_root}/dynamic
+
 	# Check if the jail is compatible with Traefik and copy the right default-config for the job.
 	if [ -z "${link_traefik}" ]; then
 		echo "Traefik-connection not enabled... Skipping connecting this jail to traefik"
@@ -104,9 +108,9 @@ exitblueprint() {
 			echo "Traefik with DHCP requires that the jail's assigned IP adddress stays the same!"
 		fi
 		echo "removing old traefik config..."
-		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}".toml
-		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}"_auth_basic.toml
-		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}"_auth_forward.toml
+		rm -f "${traefik_dyn}/${jail_name}.toml"
+		rm -f "${traefik_dyn}/${jail_name}_auth_basic.toml"
+		rm -f "${traefik_dyn}/${jail_name}_auth_forward.toml"
 		if [ -z "${domain_name}" ]; then
 			echo "domain_name required for connecting to traefik... please add domain_name to config.yml"
 		elif [ -f "${blueprint_dir}/traefik_custom.toml" ]; then
@@ -115,13 +119,13 @@ exitblueprint() {
 			traefik_status="success"
 		elif [ -f "${includes_dir}/traefik_custom.toml" ]; then
 			echo "Found default traefik configuration for this blueprint... Copying to traefik..."
-			cp "${includes_dir}"/traefik_custom.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
+			cp "${includes_dir}/traefik_custom.toml" "${traefik_temp}/${jail_name}.toml"
 			traefik_status="preinstalled"
 		elif [ -z "${traefik_service_port}" ]; then 
 			echo "Can't connect this jail to traefik... Please add a traefik_service_port to this jail in config.yml..."
 		else
 			echo "No custom traefik configuration found, using default..."
-			cp "${traefik_includes}"/default.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
+			cp "${traefik_includes}/default.toml" "${traefik_temp}/${jail_name}.toml"
 			traefik_status="preinstalled"
 		fi
 	fi
@@ -140,25 +144,29 @@ exitblueprint() {
 		elif [ -n "${traefik_auth_basic}" ]; then 
 			echo "Adding basic auth to Traefik for jail ${jail_name}"
 			users="$(sed 's/[^[:space:]]\{1,\}/"&"/g;s/ /,/g' <<<"${traefik_auth_basic}")"
-			cp "${traefik_includes}"/default_auth_basic.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}"_auth_basic.toml
-			sed -i '' "s|placeholdername|${1//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}"_auth_basic.toml
-			sed -i '' "s|placeholderusers|${users//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}"_auth_basic.toml
-			mv /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}"_auth_basic.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}"_auth_basic.toml
-			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-basic-auth\"|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
+			cp "${traefik_includes}/default_auth_basic.toml" "${traefik_temp}/${jail_name}_auth_basic.toml"
+			sed -i '' \
+				-e "s|placeholdername|${1//&/\\&}|" \
+				-e '' "s|placeholderusers|${users//&/\\&}|" \
+				"${traefik_temp}/${jail_name}_auth_basic.toml"
+			mv "${traefik_temp}/${jail_name}_auth_basic.toml" "${traefik_dyn}/${jail_name}_auth_basic.toml"
+			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-basic-auth\"|" "${traefik_temp}/${jail_name}.toml"
 			traefik_status="success"
 		elif [ -n "${traefik_auth_forward}" ]; then 
 			echo "Adding forward auth to Traefik for jail ${jail_name}"
-			cp "${traefik_includes}"/default_auth_forward.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}"_auth_forward.toml
-			sed -i '' "s|placeholdername|${1//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}"_auth_forward.toml
-			sed -i '' "s|placeholderauthforward|${traefik_auth_forward//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}"_auth_forward.toml
-			mv /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}"_auth_forward.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}"_auth_forward.toml
-			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-forward-auth\"|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
+			cp "${traefik_includes}/default_auth_forward.toml" "${traefik_temp}/${jail_name}_auth_forward.toml"
+			sed -i '' \
+				-e "s|placeholdername|${1//&/\\&}|" \
+				-e "s|placeholderauthforward|${traefik_auth_forward//&/\\&}|" \
+				"${traefik_temp}/${jail_name}_auth_forward.toml"
+			mv "${traefik_temp}/${jail_name}_auth_forward.toml" "${traefik_dyn}/${jail_name}_auth_forward.toml"
+			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-forward-auth\"|" "${traefik_temp}/${jail_name}.toml"
 			traefik_status="success"
 		else
 			echo "No auth specified, setting up traefik without auth..."
 			traefik_status="success"
 		fi
-		mv /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}".toml
+		mv "${traefik_temp}/${jail_name}.toml" "${traefik_dyn}/${jail_name}.toml"
 	fi
 
 	# Add a file to flag the jail is INSTALLED and thus trigger reinstall on next install
