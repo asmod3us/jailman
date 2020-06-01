@@ -113,9 +113,15 @@ createmount() {
 		if [ -n "${jail}" ] && [ -n "${mountpoint}" ]; then
 			iocage exec "${jail}" mkdir -p "${mountpoint}"
 			if [ -n "${fstab}" ]; then
-				iocage fstab -a "${jail}" /mnt/"${dataset}" "${mountpoint}" "${fstab}" || exit 1
+				if ! iocage fstab -a "${jail}" /mnt/"${dataset}" "${mountpoint}" "${fstab}"; then
+					echo "ERR creating mount. jail=${jail} dataset=${dataset} mountpoint=${mountpoint} fstab=${fstab}"
+					exit 1
+				fi
 			else
-				iocage fstab -a "${jail}" /mnt/"${dataset}" "${mountpoint}" nullfs rw 0 0 || exit 1
+				if ! iocage fstab -a "${jail}" /mnt/"${dataset}" "${mountpoint}" nullfs rw 0 0; then
+					echo "ERR creating mount. jail=${jail} dataset=${dataset} mountpoint=${mountpoint}"
+					exit 1
+				fi
 			fi
 		else
 			echo "No Jail Name or Mount target specified, not mounting dataset"
