@@ -100,7 +100,8 @@ exitblueprint() {
 	if [ -z "${link_traefik}" ]; then
 		echo "Traefik-connection not enabled... Skipping connecting this jail to traefik"
 	elif { [ -z "${setdhcp}" ]  || [ "${setdhcp:-}" == "on" ]; }  && [ -z "${!jailip4:-}" ] && [ -z "${!jailgateway:-}" ]; then
-		echo "Traefik requires dhcp: override in order to work with DHCP."
+		echo "Warning: Traefik with DHCP requires that the jail's assigned IP adddress stays the same."
+		echo "Please see the README for details on the setup."
 	elif [[ ${link_traefik} =~ .*[[:space:]]$ ]]; then
 		echo "Trailing whitespace in linked traefik jail '${link_traefik}'"
 	else
