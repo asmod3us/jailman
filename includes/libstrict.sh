@@ -65,10 +65,11 @@ strict::mode() {
 	set -o errtrace  # =set -E: Make sure any error trap is inherited
 	set -o nounset   # =set -u: Disallow expansion of unset variables
 	set -o pipefail  #          Use last non-zero exit code in a pipeline
+	# set -o functrace # =set -T: inherit DEBUG and RETURN traps
 
 	# shopt -s extdebug
 	trap 'strict::failure $?' ERR
-	export BASHOPTS  # run blueprint scripts with same options
+	export SHELLOPTS # run blueprint scripts with same options
 }
 export -f strict::mode
 
