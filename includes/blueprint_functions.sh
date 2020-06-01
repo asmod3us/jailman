@@ -121,7 +121,7 @@ exitblueprint() {
 			echo "Found default traefik configuration for this blueprint... Copying to traefik..."
 			cp "${includes_dir}/traefik_custom.toml" "${traefik_temp}/${jail_name}.toml"
 			traefik_status="preinstalled"
-		elif [ -z "${traefik_service_port}" ]; then 
+		elif [ -z "${traefik_service_port}" ]; then
 			echo "Can't connect this jail to traefik... Please add a traefik_service_port to this jail in config.yml..."
 		else
 			echo "No custom traefik configuration found, using default..."
@@ -141,7 +141,7 @@ exitblueprint() {
 		sed -i '' "s|placeholderauthforward|${traefik_auth_forward//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
 		if [ -n "${traefik_auth_forward}" ] && [ -n "${traefik_auth_basic}" ]; then 
 			echo "cant setup traefik with both basic AND forward auth. Please pick one only."
-		elif [ -n "${traefik_auth_basic}" ]; then 
+		elif [ -n "${traefik_auth_basic}" ]; then
 			echo "Adding basic auth to Traefik for jail ${jail_name}"
 			users="$(sed 's/[^[:space:]]\{1,\}/"&"/g;s/ /,/g' <<<"${traefik_auth_basic}")"
 			cp "${traefik_includes}/default_auth_basic.toml" "${traefik_temp}/${jail_name}_auth_basic.toml"
