@@ -2,10 +2,10 @@
 # shellcheck disable=SC1003
 
 initblueprint() {
-	local blueprint_name blueprint varlist linkblueprint linkvarlist value val linkvalue linkval
-	blueprint_name=${1:?}
+	local jail_name blueprint varlist linkblueprint linkvarlist value val linkvalue linkval
+	jail_name=${1:?}
 
-	blueprint=jail_${blueprint_name}_blueprint
+	blueprint=jail_${jail_name}_blueprint
 	varlist=blueprint_${!blueprint}_vars
 
 	for var in ${!varlist:-} ${global_jails_vars}
@@ -63,15 +63,15 @@ cleanupblueprint() {
 export -f cleanupblueprint
 
 exitblueprint() {
-local blueprint_name
-blueprint_name=${1:?}
+local jail_name blueprint_name traefik_service_port traefik_includes traefik_status
 
-blueprint=jail_${1}_blueprint
-blueprint="jail_${1}_blueprint" 
-traefik_service_port="blueprint_${!blueprint}_traefik_service_port"
+jail_name=${1:?}
+blueprint_name=jail_${1}_blueprint
+blueprint_name="jail_${1}_blueprint" 
+traefik_service_port="blueprint_${!blueprint_name}_traefik_service_port"
 traefik_service_port="${!traefik_service_port}"
-traefikincludes="${SCRIPT_DIR}/blueprints/traefik/includes"
-traefikstatus=""
+traefik_includes="${SCRIPT_DIR}/blueprints/traefik/includes"
+traefik_status=""
 
 # Check if the jail is compatible with Traefik and copy the right default-config for the job.
 if [ -z "${link_traefik}" ] || [ -z "${ip4_addr}" ]; then
@@ -86,22 +86,22 @@ else
 	elif [ -f "/mnt/${global_dataset_config}/${1}/traefik_custom.toml" ]; then
 		echo "Found custom traefik configuration... Copying to traefik..."
 		cp "${includes_dir}"/traefik_custom.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
-		traefikstatus="success"
+		traefik_status="success"
 	elif [ -f "${includes_dir}/traefik_custom.toml" ]; then
 		echo "Found default traefik configuration for this blueprint... Copying to traefik..."
 		cp "${includes_dir}"/traefik_custom.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
-		traefikstatus="preinstalled"
+		traefik_status="preinstalled"
 	elif [ -z "${traefik_service_port}" ]; then 
 		echo "Can't connect this jail to traefik... Please add a traefik_service_port to this jail in config.yml..."
 	else
 		echo "No custom traefik configuration found, using default..."
-		cp "${traefikincludes}"/default.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
-		traefikstatus="preinstalled"
+		cp "${traefik_includes}"/default.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
+		traefik_status="preinstalled"
 	fi
 fi
 
 # If the default config requires post-processing (it always does except for user-custom config in /config), do the post processing.
-if [ "${traefikstatus}" = "preinstalled" ]; then
+if [ "${traefik_status}" = "preinstalled" ]; then
 	# replace placeholder values.
 	sed -i '' "s|placeholderdashboardhost|${domain_name//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
 	sed -i '' "s|placeholdername|${1//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
@@ -114,45 +114,45 @@ if [ "${traefikstatus}" = "preinstalled" ]; then
 	elif [ -n "${traefik_auth_basic}" ]; then 
 		echo "Adding basic auth to Traefik for jail ${1}"
 		users="$(sed 's/[^[:space:]]\{1,\}/"&"/g;s/ /,/g' <<<"${traefik_auth_basic}")"
-		cp "${traefikincludes}"/default_auth_basic.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_basic.toml
+		cp "${traefik_includes}"/default_auth_basic.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_basic.toml
 		sed -i '' "s|placeholdername|${1//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_basic.toml
 		sed -i '' "s|placeholderusers|${users//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_basic.toml
 		mv /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_basic.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${1}"_auth_basic.toml
 		sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-basic-auth\"|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
-		traefikstatus="success"
+		traefik_status="success"
 	elif [ -n "${traefik_auth_forward}" ]; then 
 		echo "Adding forward auth to Traefik for jail ${1}"
-		cp "${traefikincludes}"/default_auth_forward.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_forward.toml
+		cp "${traefik_includes}"/default_auth_forward.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_forward.toml
 		sed -i '' "s|placeholdername|${1//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_forward.toml
 		sed -i '' "s|placeholderauthforward|${traefik_auth_forward//&/\\&}|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_forward.toml
 		mv /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}"_auth_forward.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${1}"_auth_forward.toml
 		sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-forward-auth\"|" /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml
-		traefikstatus="success"
+		traefik_status="success"
 	else
 		echo "No auth specified, setting up traefik without auth..."
-		traefikstatus="success"
+		traefik_status="success"
 	fi
 	mv /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${1}".toml /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${1}".toml
 fi
 
 # Add a file to flag the jail is INSTALLED and thus trigger reinstall on next install
 echo "DO NOT DELETE THIS FILE" >> "/mnt/${global_dataset_config}/${1}/INSTALLED"
-echo "Jail $1 using blueprint ${!blueprint}, installed successfully."
+echo "Jail $1 using blueprint ${!blueprint_name}, installed successfully."
 
 # Pick the right success message to hint to user how to connect to the jail
-if [ "${traefikstatus}" = "success" ]; then
-	echo "Your jail ${1} running ${!blueprint} is now accessible via Traefik at https://${domain_name}"
+if [ "${traefik_status}" = "success" ]; then
+	echo "Your jail ${1} running ${!blueprint_name} is now accessible via Traefik at https://${domain_name}"
 elif [[ -n "${2}" ]]; then
 	echo " ${2}"
 elif [ -n "${traefik_service_port}" ]; then
-	echo "Your jail ${1} running ${!blueprint} is now accessible at http://${jail_ip}:${traefik_service_port}"
+	echo "Your jail ${1} running ${!blueprint_name} is now accessible at http://${jail_ip}:${traefik_service_port}"
 else
 	echo "Please consult the wiki for instructions connecting to your newly installed jail"
 fi
 
 
 echo "DO NOT DELETE THIS FILE" >> "/mnt/${global_dataset_config}/${1}/INSTALLED"
-echo "Jail $1 using blueprint ${!blueprint}, installed successfully."
+echo "Jail $1 using blueprint ${!blueprint_name}, installed successfully."
 if [[ ! "${2}" ]]; then
 	echo "Please consult the wiki for instructions connecting to your newly installed jail"
 else
