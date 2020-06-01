@@ -50,6 +50,24 @@ validate_config() {
 	fi
 }
 
+load_config() {
+	# Parse the Config YAML
+	for configpath in "${SCRIPT_DIR}"/blueprints/*/config.yml; do
+		cfg=$(parse_yaml "${configpath}")
+		validate_config "${configpath}" "$cfg"
+		# shellcheck disable=SC2251
+		! eval "$cfg"
+	done
+
+	cfg=$(parse_yaml "${SCRIPT_DIR}/includes/global.yml")
+	validate_config "${SCRIPT_DIR}/includes/global.yml" "$cfg"
+	eval "$cfg"
+
+	cfg=$(parse_yaml "${SCRIPT_DIR}/config.yml")
+	validate_config "${SCRIPT_DIR}/config.yml" "$cfg"
+	eval "$cfg"
+}
+
 # automatic update function
 gitupdate() {
 	local gitbranch  branch

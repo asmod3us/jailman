@@ -123,21 +123,8 @@ global_dataset_iocage=$(zfs get -H -o value mountpoint "$(iocage get -p)"/iocage
 global_dataset_iocage=${global_dataset_iocage#/mnt/}
 export global_dataset_iocage
 
-# Parse the Config YAML
-for configpath in "${SCRIPT_DIR}"/blueprints/*/config.yml; do
-	cfg=$(parse_yaml "${configpath}")
-	validate_config "${configpath}" "$cfg"
-	# shellcheck disable=SC2251
-	! eval "$cfg"
-done
-
-cfg=$(parse_yaml "${SCRIPT_DIR}/includes/global.yml")
-validate_config "${SCRIPT_DIR}/includes/global.yml" "$cfg"
-eval "$cfg"
-
-cfg=$(parse_yaml "${SCRIPT_DIR}/config.yml")
-validate_config "${SCRIPT_DIR}/config.yml" "$cfg"
-eval "$cfg"
+# load all config
+load_config
 
 if [ "${global_version:-}" != "1.3" ]; then
 	echo "You are using old config.yml syntax."
