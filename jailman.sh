@@ -140,7 +140,6 @@ if [ ${#destroyjails[@]} -gt 0 ]; then
 		iocage destroy -f "${jail}" || warn "destroy failed for ${jail}"
 		cleanupblueprint "${jail}"
 	done
-
 fi
 
 # Check and Execute requested jail Installs
