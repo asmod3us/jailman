@@ -77,7 +77,7 @@ export -f cleanupblueprint
 exitblueprint() {
 	# as this function is called from blueprints we need to re-enable strict mode
 	strict::mode
-	local jail_name blueprint_name traefik_service_port traefik_includes traefik_status
+	local jail_name blueprint_name traefik_service_port traefik_includes traefik_status jaildhcp setdhcp
 
 	jail_name=${1:?}
 	blueprint_name=jail_${jail_name}_blueprint
@@ -86,11 +86,17 @@ exitblueprint() {
 	traefik_service_port="${!traefik_service_port}"
 	traefik_includes="${SCRIPT_DIR}/blueprints/traefik/includes"
 	traefik_status=""
+	jaildhcp="jail_${jail_name}_dhcp"
+	setdhcp=${!jaildhcp}
 
 	# Check if the jail is compatible with Traefik and copy the right default-config for the job.
-	if [ -z "${link_traefik}" ] || [ -z "${ip4_addr}" ]; then
+	if [ -z "${link_traefik}" ]; then
 		echo "Traefik-connection not enabled... Skipping connecting this jail to traefik"
 	else
+		if [ -z "${ip4_addr}" ] && [ "${setdhcp}" == "on" ] && [ -n "${jail_ip}" ]; then
+			echo "Traefik-connection with DHCP requires that the assigned IP adddress stays the same!"
+		fi
+
 		echo "removing old traefik config..."
 		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}".toml
 		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}"_auth_basic.toml
