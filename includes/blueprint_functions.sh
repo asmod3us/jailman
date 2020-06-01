@@ -75,7 +75,7 @@ export -f cleanupblueprint
 exitblueprint() {
 	# as this function is called from blueprints we need to re-enable strict mode
 	strict::mode
-	local jail_name blueprint_name traefik_service_port traefik_includes traefik_status jaildhcp setdhcp
+	local jail_name blueprint_name traefik_service_port traefik_includes traefik_status jailip4 jailgateway jaildhcp setdhcp traefik_root traefik_tmp traefik_dyn
 
 	jail_name=${1:?}
 	blueprint_name=jail_${jail_name}_blueprint
@@ -84,19 +84,23 @@ exitblueprint() {
 	traefik_service_port="${!traefik_service_port}"
 	traefik_includes="${SCRIPT_DIR}/blueprints/traefik/includes"
 	traefik_status=""
-	jaildhcp="jail_${jail_name}_dhcp"
+
+	jailip4="jail_${jail}_ip4_addr"
+	jailgateway="jail_${jail}_gateway"
+	jaildhcp="jail_${jail}_dhcp"
 	setdhcp=${!jaildhcp}
 
 	# Check if the jail is compatible with Traefik and copy the right default-config for the job.
 	if [ -z "${link_traefik}" ]; then
 		echo "Traefik-connection not enabled... Skipping connecting this jail to traefik"
+	elif [ -z "${setdhcp}" ] && [ -z "${!jailip4}" ] && [ -z "${!jailgateway}" ]; then
+		echo "Traefik requires dhcp: override in order to work with DHCP."
 	elif [[ ${link_traefik} =~ .*[[:space:]]$ ]]; then
 		echo "Trailing whitespace in linked traefik jail '${link_traefik}'"
 	else
 		if [ -z "${ip4_addr}" ] && [ "${setdhcp}" == "override" ] && [ -n "${jail_ip}" ]; then
-			echo "Traefik-connection with DHCP requires that the assigned IP adddress stays the same!"
+			echo "Traefik with DHCP requires that the jail's assigned IP adddress stays the same!"
 		fi
-
 		echo "removing old traefik config..."
 		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}".toml
 		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}"_auth_basic.toml
