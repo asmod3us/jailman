@@ -28,7 +28,7 @@ parse_yaml() {
 
 # $1: config string to validate
 validate_config() {
-	{ sed -e s'/export //' | awk -F= '$2 ~ /.*[[:space:]]"$/ { print "Warning: Key " $1 " has trailing whitespace: " $2 "" }'; } <<< "$1"
+	{ sed -e s'/export //' | awk -F= '$2 ~ /.*[[:space:]]"$/ || $2 ~ /^"[[:space:]].*/ { print "Warning: Key " $1 " has trailing whitespace: " $2 "" }'; } <<< "$1"
 }
 
 # automatic update function
