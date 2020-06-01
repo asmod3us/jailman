@@ -1,7 +1,7 @@
 #!/usr/local/bin/bash
 # shellcheck disable=SC1003
 
-# shellcheck source=libstrict.sh
+# shellcheck source=includes/libstrict.sh
 source "${SCRIPT_DIR}/includes/libstrict.sh"
 strict::mode
 
