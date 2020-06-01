@@ -109,9 +109,9 @@ exitblueprint() {
 		rm -f /mnt/"${global_dataset_config}"/"${link_traefik}"/dynamic/"${jail_name}"_auth_forward.toml
 		if [ -z "${domain_name}" ]; then
 			echo "domain_name required for connecting to traefik... please add domain_name to config.yml"
-		elif [ -f "/mnt/${global_dataset_config}/${jail_name}/traefik_custom.toml" ]; then
+		elif [ -f "${blueprint_dir}/traefik_custom.toml" ]; then
 			echo "Found custom traefik configuration... Copying to traefik..."
-			cp "${includes_dir}"/traefik_custom.toml /mnt/"${global_dataset_config}"/"${link_traefik}"/temp/"${jail_name}".toml
+			cp "${blueprint_dir}/traefik_custom.toml" "${traefik_temp}/${jail_name}.toml"
 			traefik_status="success"
 		elif [ -f "${includes_dir}/traefik_custom.toml" ]; then
 			echo "Found default traefik configuration for this blueprint... Copying to traefik..."
