@@ -126,19 +126,17 @@ export global_dataset_iocage
 # Parse the Config YAML
 for configpath in "${SCRIPT_DIR}"/blueprints/*/config.yml; do
 	cfg=$(parse_yaml "${configpath}")
-	# shellcheck disable=SC2086
 	validate_config "$cfg"
+	# shellcheck disable=SC2251
 	! eval "$cfg"
 done
 
 cfg=$(parse_yaml "${SCRIPT_DIR}/includes/global.yml")
 validate_config "$cfg"
-	# shellcheck disable=SC2086
 eval "$cfg"
 
 cfg=$(parse_yaml "${SCRIPT_DIR}/config.yml")
 validate_config "$cfg"
-	# shellcheck disable=SC2086
 eval "$cfg"
 
 if [ "${global_version:-}" != "1.3" ]; then
