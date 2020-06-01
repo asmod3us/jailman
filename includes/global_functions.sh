@@ -46,8 +46,7 @@ jailcreate() {
 	else
 		jailinterfaces=${!jailinterfaces}
 	fi
-
-	if [ -z "${setdhcp}" ] && [ -z "${!jailip4}" ] && [ -z "${!jailgateway}" ]; then
+if [ -z "${setdhcp}" ] && [ -z "${!jailip4}" ] && [ -z "${!jailgateway}" ]; then
 		echo 'no network settings specified in config.yml, defaulting to dhcp="on"'
 		setdhcp="on"
 	fi
@@ -55,7 +54,7 @@ jailcreate() {
 	echo "Creating jail for $jail"
 	pkgs="$(sed 's/[^[:space:]]\{1,\}/"&"/g;s/ /,/g' <<<"${global_jails_pkgs:?} ${!blueprintpkgs}")"
 	echo '{"pkgs":['"${pkgs}"']}' > /tmp/pkg.json
-	if [ "${setdhcp}" == "on" ]
+	if [ "${setdhcp}" == "on" ] || [ "${setdhcp}" == "override" ]
 	then
 		if ! iocage create -n "${jail}" -p /tmp/pkg.json -r "${global_jails_version:?}" interfaces="${jailinterfaces}" dhcp="on" vnet="on" allow_raw_sockets="1" boot="on" ${setextra:+"$setextra"} -b
 		then

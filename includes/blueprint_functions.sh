@@ -93,7 +93,7 @@ exitblueprint() {
 	elif [[ ${link_traefik} =~ .*[[:space:]]$ ]]; then
 		echo "Trailing whitespace in linked traefik jail '${link_traefik}'"
 	else
-		if [ -z "${ip4_addr}" ] && [ "${setdhcp}" == "on" ] && [ -n "${jail_ip}" ]; then
+		if [ -z "${ip4_addr}" ] && [ "${setdhcp}" == "override" ] && [ -n "${jail_ip}" ]; then
 			echo "Traefik-connection with DHCP requires that the assigned IP adddress stays the same!"
 		fi
 
