@@ -106,7 +106,9 @@ exitblueprint() {
 		echo "Trailing whitespace in linked traefik jail '${link_traefik}'"
 	else
 		if [ -z "${ip4_addr}" ] && [ "${setdhcp}" == "override" ] && [ -n "${jail_ip}" ]; then
-			echo "Traefik with DHCP requires that the jail's assigned IP adddress stays the same!"
+			echo "Warning: Traefik with DHCP requires that the jail's assigned IP adddress stays the same."
+			echo "Please see the README for details. If you cannot guarantee static IP assignment this will"
+			echo "BREAK in unexpected ways and potentially expose services you did not intend to expose."
 		fi
 		echo "removing old traefik config..."
 		rm -f "${traefik_dyn}/${jail_name}.toml"
