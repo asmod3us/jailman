@@ -132,17 +132,19 @@ validate_config() {
 for configpath in "${SCRIPT_DIR}"/blueprints/*/config.yml; do
 	cfg=$(parse_yaml "${configpath}")
 	validate_config "$cfg"
-	# shellcheck disable=SC2046
-	! eval "$cfg"
+	# shellcheck disable=SC2086
+	! eval $cfg
 done
 
 cfg=$(parse_yaml "${SCRIPT_DIR}/includes/global.yml")
 validate_config "$cfg"
-eval "$cfg"
+	# shellcheck disable=SC2086
+eval $cfg
 
 cfg=$(parse_yaml "${SCRIPT_DIR}/config.yml")
 validate_config "$cfg"
-eval "$cfg"
+	# shellcheck disable=SC2086
+eval $cfg
 
 if [ "${global_version:-}" != "1.3" ]; then
 	echo "You are using old config.yml syntax."
