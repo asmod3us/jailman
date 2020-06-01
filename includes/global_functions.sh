@@ -1,10 +1,6 @@
 #!/usr/local/bin/bash
 # shellcheck disable=SC1003
 
-# shellcheck source=libstrict.sh
-source "${SCRIPT_DIR}/includes/libstrict.sh"
-strict::mode
-
 jailcreate() {
 	local jail  blueprint
 
@@ -90,8 +86,6 @@ if [ -z "${setdhcp}" ] && [ -z "${!jailip4}" ] && [ -z "${!jailgateway}" ]; then
 }
 
 createmount() {
-	# as this function is called from blueprints we need to re-enable strict mode
-	strict::mode
 	local jail dataset mountpoint fstab
 
 	jail=${1:-}

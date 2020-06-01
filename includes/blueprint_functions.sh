@@ -1,12 +1,9 @@
 #!/usr/local/bin/bash
 # shellcheck disable=SC1003
 
-# shellcheck source=libstrict.sh
-source "${SCRIPT_DIR}/includes/libstrict.sh"
-strict::mode
-
 initblueprint() {
 	# as this function is called from blueprints we need to re-enable strict mode
+	# shellcheck source=libstrict.sh
 	source "${SCRIPT_DIR}/includes/libstrict.sh"
 	strict::mode
 
