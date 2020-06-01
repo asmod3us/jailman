@@ -14,6 +14,9 @@ strict::mode
 echo "Working directory for jailman.sh is: ${SCRIPT_DIR}"
 
 #Includes
+# shellcheck source=includes/init_functions.sh
+source "${SCRIPT_DIR}/includes/init_functions.sh"
+
 # shellcheck source=includes/global_functions.sh
 source "${SCRIPT_DIR}/includes/global_functions.sh"
 
