@@ -151,7 +151,7 @@ exitblueprint() {
 			cp "${traefik_includes}/default_auth_basic.toml" "${traefik_tmp}/${jail_name}_auth_basic.toml"
 			sed -i '' \
 				-e "s|placeholdername|${1//&/\\&}|" \
-				-e '' "s|placeholderusers|${users//&/\\&}|" \
+				-e "s|placeholderusers|${users//&/\\&}|" \
 				"${traefik_tmp}/${jail_name}_auth_basic.toml"
 			mv "${traefik_tmp}/${jail_name}_auth_basic.toml" "${traefik_dyn}/${jail_name}_auth_basic.toml"
 			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-basic-auth\"|" "${traefik_tmp}/${jail_name}.toml"
