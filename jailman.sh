@@ -123,19 +123,29 @@ global_dataset_iocage=$(zfs get -H -o value mountpoint "$(iocage get -p)"/iocage
 global_dataset_iocage=${global_dataset_iocage#/mnt/}
 export global_dataset_iocage
 
+# $1: config string to validate
+validate_config() {
+	sed -e s'/export //' | awk -F= '$2 ~ /.*[[:space:]]"$/ { print "Warning: Key " $1 " has trailing whitespace: " $2 "" }' <<<"$1"
+}
+
 # Parse the Config YAML
 for configpath in "${SCRIPT_DIR}"/blueprints/*/config.yml; do
+	cfg=$(parse_yaml "${configpath}")
+	validate_config "$cfg"
 	# shellcheck disable=SC2046
-	! eval $(parse_yaml "${configpath}")
+	! eval "$cfg"
 done
 
-# shellcheck disable=SC2046
-eval $(parse_yaml "${SCRIPT_DIR}/includes/global.yml")
-# shellcheck disable=SC2046
-eval $(parse_yaml "${SCRIPT_DIR}/config.yml")
+cfg=$(parse_yaml "${SCRIPT_DIR}/includes/global.yml")
+validate_config "$cfg"
+eval "$cfg"
+
+cfg=$(parse_yaml "${SCRIPT_DIR}/config.yml")
+validate_config "$cfg"
+eval "$cfg"
 
 if [ "${global_version:-}" != "1.3" ]; then
-	echo "You are using old config.yml synatx."
+	echo "You are using old config.yml syntax."
 	echo "Please check the wiki for required changes"
 	exit 1
 fi
