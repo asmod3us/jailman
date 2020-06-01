@@ -74,6 +74,7 @@ export -f cleanupblueprint
 
 exitblueprint() {
 	# as this function is called from blueprints we need to re-enable strict mode
+	source "${SCRIPT_DIR}/includes/libstrict.sh"
 	strict::mode
 	local jail_name blueprint_name traefik_service_port traefik_includes traefik_status jailip4 jailgateway jaildhcp setdhcp traefik_root traefik_tmp traefik_dyn
 
@@ -86,8 +87,8 @@ exitblueprint() {
 	traefik_status=""
 
 	jailip4="jail_${jail}_ip4_addr"
-	jailgateway="jail_${jail}_gateway"
-	jaildhcp="jail_${jail}_dhcp"
+	jailgateway="jail_${jail_name}_gateway"
+	jaildhcp="jail_${jail_name}_dhcp"
 	setdhcp=${!jaildhcp}
 
 	# Check if the jail is compatible with Traefik and copy the right default-config for the job.
