@@ -60,7 +60,6 @@ export -f initblueprint
 
 cleanupblueprint() {
 	local jail_name=${1:?}
-	local status_message=${2:-}
 
 	link_traefik="jail_${jail_name}_link_traefik"
 	link_traefik="${!link_traefik:-}"
