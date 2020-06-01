@@ -28,8 +28,8 @@ parse_yaml() {
 # $1: config file
 # $2: parsed config string to validate
 validate_config() {
-	file=${1}
-	config=${2}
+	file=${1:?}
+	config=${2:?}
 	if ! { sed -e s'/export //' | awk -F= '
 		BEGIN {
 			err = 0
