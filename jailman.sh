@@ -106,10 +106,10 @@ export SCRIPT_DIR
 echo "Working directory for jailman.sh is: ${SCRIPT_DIR}"
 
 #Includes
-# shellcheck source=includes/global.sh
+# shellcheck source=includes/global_functions.sh
 source "${SCRIPT_DIR}/includes/global_functions.sh"
 
-# shellcheck source=includes/global.sh
+# shellcheck source=includes/blueprint_functions.sh
 source "${SCRIPT_DIR}/includes/blueprint_functions.sh"
 
 # Check for root privileges

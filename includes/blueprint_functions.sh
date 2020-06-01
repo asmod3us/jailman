@@ -156,7 +156,7 @@ echo "Jail $1 using blueprint ${!blueprint}, installed successfully."
 if [[ ! "${2}" ]]; then
 	echo "Please consult the wiki for instructions connecting to your newly installed jail"
 else
-	echo ${2}
+	echo "${2}"
 fi
 
 }
