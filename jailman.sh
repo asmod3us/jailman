@@ -162,7 +162,6 @@ if [ ${#installjails[@]} -gt 0 ]; then
 	for jail in "${installjails[@]}"
 	do
 		blueprint=jail_${jail}_blueprint
-		echo "blueprint val: ${!blueprint}"
 		if [ -z "${!blueprint:-}" ]
 		then
 			echo "Config for ${jail} in config.yml incorrect. Please check your config."
