@@ -76,9 +76,10 @@ exitblueprint() {
 	# as this function is called from blueprints we need to re-enable strict mode
 	source "${SCRIPT_DIR}/includes/libstrict.sh"
 	strict::mode
-	local jail_name blueprint_name traefik_service_port traefik_includes traefik_status jailip4 jailgateway jaildhcp setdhcp traefik_root traefik_tmp traefik_dyn
+	local jail_name status_message blueprint_name traefik_service_port traefik_includes traefik_status jailip4 jailgateway jaildhcp setdhcp traefik_root traefik_tmp traefik_dyn
 
 	jail_name=${1:?}
+	status_message=${2:-}
 	blueprint_name=jail_${jail_name}_blueprint
 	blueprint_name="jail_${jail_name}_blueprint"
 	traefik_service_port="blueprint_${!blueprint_name}_traefik_service_port"
