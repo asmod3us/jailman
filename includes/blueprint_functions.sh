@@ -86,7 +86,7 @@ exitblueprint() {
 	traefik_includes="${SCRIPT_DIR}/blueprints/traefik/includes"
 	traefik_status=""
 
-	jailip4="jail_${jail}_ip4_addr"
+	jailip4="jail_${jail_name}_ip4_addr"
 	jailgateway="jail_${jail_name}_gateway"
 	jaildhcp="jail_${jail_name}_dhcp"
 	setdhcp=${!jaildhcp}
