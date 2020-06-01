@@ -33,7 +33,7 @@ initblueprint() {
 		fi
 	done
 
-	declare -g "jail_root=/mnt/${global_dataset_iocage}/jails/$1/root"
+	declare -g "jail_root=/mnt/${global_dataset_iocage}/jails/${jail_name}/root"
 	declare -g "blueprint_dir=${SCRIPT_DIR}/blueprints/${!blueprint}"
 	declare -g "includes_dir=${SCRIPT_DIR}/blueprints/${!blueprint}/includes"
 
@@ -48,8 +48,8 @@ initblueprint() {
 	fi
 
 	if [ -z "${ip4_addr}" ]; then
-		DEFAULT_IF=$(iocage exec "$1" route get default | awk '/interface/ {print $2}')
-		declare -g "jail_ip=$(iocage exec "$1" ifconfig "$DEFAULT_IF" | awk '/inet/ { print $2 }')"
+		DEFAULT_IF=$(iocage exec "${jail_name}" route get default | awk '/interface/ {print $2}')
+		declare -g "jail_ip=$(iocage exec "${jail_name}" ifconfig "$DEFAULT_IF" | awk '/inet/ { print $2 }')"
 	else
 		declare -g "jail_ip=${ip4_addr%/*}"
 	fi
