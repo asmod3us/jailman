@@ -116,17 +116,17 @@ exitblueprint() {
 			echo "domain_name required for connecting to traefik... please add domain_name to config.yml"
 		elif [ -f "${blueprint_dir}/traefik_custom.toml" ]; then
 			echo "Found custom traefik configuration... Copying to traefik..."
-			cp "${blueprint_dir}/traefik_custom.toml" "${traefik_temp}/${jail_name}.toml"
+			cp "${blueprint_dir}/traefik_custom.toml" "${traefik_tmp}/${jail_name}.toml"
 			traefik_status="success"
 		elif [ -f "${includes_dir}/traefik_custom.toml" ]; then
 			echo "Found default traefik configuration for this blueprint... Copying to traefik..."
-			cp "${includes_dir}/traefik_custom.toml" "${traefik_temp}/${jail_name}.toml"
+			cp "${includes_dir}/traefik_custom.toml" "${traefik_tmp}/${jail_name}.toml"
 			traefik_status="preinstalled"
 		elif [ -z "${traefik_service_port}" ]; then
 			echo "Can't connect this jail to traefik... Please add a traefik_service_port to this jail in config.yml..."
 		else
 			echo "No custom traefik configuration found, using default..."
-			cp "${traefik_includes}/default.toml" "${traefik_temp}/${jail_name}.toml"
+			cp "${traefik_includes}/default.toml" "${traefik_tmp}/${jail_name}.toml"
 			traefik_status="preinstalled"
 		fi
 	fi
@@ -141,36 +141,36 @@ exitblueprint() {
 			-e "s|placeholderurl|${jail_ip}:${traefik_service_port}|" \
 			-e "s|placeholderusers|${traefik_auth_basic//&/\\&}|" \
 			-e "s|placeholderauthforward|${traefik_auth_forward//&/\\&}|" \
-			"${traefik_temp}/${jail_name}.toml"
+			"${traefik_tmp}/${jail_name}.toml"
 
 		if [ -n "${traefik_auth_forward}" ] && [ -n "${traefik_auth_basic}" ]; then
 			echo "Cannot setup traefik with both basic AND forward auth. Please pick one only."
 		elif [ -n "${traefik_auth_basic}" ]; then
 			echo "Adding basic auth to Traefik for jail ${jail_name}"
 			users="$(sed 's/[^[:space:]]\{1,\}/"&"/g;s/ /,/g' <<<"${traefik_auth_basic}")"
-			cp "${traefik_includes}/default_auth_basic.toml" "${traefik_temp}/${jail_name}_auth_basic.toml"
+			cp "${traefik_includes}/default_auth_basic.toml" "${traefik_tmp}/${jail_name}_auth_basic.toml"
 			sed -i '' \
 				-e "s|placeholdername|${1//&/\\&}|" \
 				-e '' "s|placeholderusers|${users//&/\\&}|" \
-				"${traefik_temp}/${jail_name}_auth_basic.toml"
-			mv "${traefik_temp}/${jail_name}_auth_basic.toml" "${traefik_dyn}/${jail_name}_auth_basic.toml"
-			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-basic-auth\"|" "${traefik_temp}/${jail_name}.toml"
+				"${traefik_tmp}/${jail_name}_auth_basic.toml"
+			mv "${traefik_tmp}/${jail_name}_auth_basic.toml" "${traefik_dyn}/${jail_name}_auth_basic.toml"
+			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-basic-auth\"|" "${traefik_tmp}/${jail_name}.toml"
 			traefik_status="success"
 		elif [ -n "${traefik_auth_forward}" ]; then
 			echo "Adding forward auth to Traefik for jail ${jail_name}"
-			cp "${traefik_includes}/default_auth_forward.toml" "${traefik_temp}/${jail_name}_auth_forward.toml"
+			cp "${traefik_includes}/default_auth_forward.toml" "${traefik_tmp}/${jail_name}_auth_forward.toml"
 			sed -i '' \
 				-e "s|placeholdername|${1//&/\\&}|" \
 				-e "s|placeholderauthforward|${traefik_auth_forward//&/\\&}|" \
-				"${traefik_temp}/${jail_name}_auth_forward.toml"
-			mv "${traefik_temp}/${jail_name}_auth_forward.toml" "${traefik_dyn}/${jail_name}_auth_forward.toml"
-			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-forward-auth\"|" "${traefik_temp}/${jail_name}.toml"
+				"${traefik_tmp}/${jail_name}_auth_forward.toml"
+			mv "${traefik_tmp}/${jail_name}_auth_forward.toml" "${traefik_dyn}/${jail_name}_auth_forward.toml"
+			sed -i '' "s|\"retry\"|\"retry\",\"${1//&/\\&}-forward-auth\"|" "${traefik_tmp}/${jail_name}.toml"
 			traefik_status="success"
 		else
 			echo "No auth specified, setting up traefik without auth..."
 			traefik_status="success"
 		fi
-		mv "${traefik_temp}/${jail_name}.toml" "${traefik_dyn}/${jail_name}.toml"
+		mv "${traefik_tmp}/${jail_name}.toml" "${traefik_dyn}/${jail_name}.toml"
 	fi
 
 	# Add a file to flag the jail is INSTALLED and thus trigger reinstall on next install
