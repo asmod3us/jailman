@@ -3,6 +3,7 @@
 
 # shellcheck source=libstrict.sh
 source "${SCRIPT_DIR}/includes/libstrict.sh"
+strict::mode
 
 # yml Parser function
 # Based on https://gist.github.com/pkuczynski/8665367

@@ -3,6 +3,7 @@
 
 # shellcheck source=libstrict.sh
 source "${SCRIPT_DIR}/includes/libstrict.sh"
+strict::mode
 
 initblueprint() {
 	# as this function is called from blueprints we need to re-enable strict mode
