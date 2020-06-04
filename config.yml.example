@@ -109,7 +109,6 @@ jail:
     password: grafana
     link_influxdb: influxdbjail
     link_unifi: unifijail
-    dhcp: on
 
   forked_daapdjail:
     blueprint: forked_daapd
